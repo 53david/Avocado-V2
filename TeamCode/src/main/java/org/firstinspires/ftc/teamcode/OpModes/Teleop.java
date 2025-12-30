@@ -103,8 +103,8 @@ public class Teleop extends LinearOpMode {
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor);
         outake = new Outake(shoot1,shoot2,rotate,transfer,telemetry);
-        storage = new Storage(servo,shoot1,intakeMotor,colorSensor,telemetry);
-        vision = new Vision(rotate,webcam1);
+        storage = new Storage(servo,intakeMotor,intakeMotor,colorSensor,telemetry);
+        vision = new Vision(rotate,webcam1,telemetry);
         storage.turner.setPidCoefficients(coefs);
 
 

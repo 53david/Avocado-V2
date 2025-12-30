@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Components;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
+
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -16,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Stuff.PIDController;
 
 public class Storage {
-    private CRServo revolver;
+    private CRServo revolver; private RevColorSensorV3 v8;
     ElapsedTime timer = new ElapsedTime();
     ElapsedTime time = new ElapsedTime(); int nr = 0 , prevnr;
     double p = 1.0, t=2000; boolean ok = false; Gamepad gamepad2;
@@ -75,6 +77,7 @@ public class Storage {
         revolver.setPower(turner.calculatePower(FromTicksToDegrees()));
     }
     public void Index(){
+
         getColor();
         switch (state){
             case IDLE:
@@ -94,7 +97,7 @@ public class Storage {
                 break;
             case MANUAL:
                     if (timer.milliseconds()>500){
-                        Turn120();
+                        Turn120(); timer.reset();
                         state = state.IDLE;
                     }
                 break;

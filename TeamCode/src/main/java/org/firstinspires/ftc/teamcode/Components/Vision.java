@@ -5,6 +5,7 @@ import android.util.Size;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -17,11 +18,13 @@ public class Vision {
     public DcMotorEx rotate;
     public AprilTagProcessor tagProcessor;
     public VisionPortal visionPortal;
+    Telemetry telemetry;
     double fx=752.848, fy=752.848, cx=314.441, cy=219.647;
     private WebcamName webcam;
 
-    public Vision(DcMotorEx rotate,WebcamName webcam){
+    public Vision(DcMotorEx rotate,WebcamName webcam,Telemetry telemetry){
         this.rotate=rotate;
+        this.telemetry=telemetry;
         this.webcam=webcam;
         rotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -49,27 +52,21 @@ public class Vision {
     public void update() {
         double n = 10.0 / 3.0;
         ArrayList<AprilTagDetection> detections = tagProcessor.getDetections();
-        if (detections.isEmpty()) {
-            return;
-        } else {
+        if (!detections.isEmpty()) {
             AprilTagDetection tag = detections.get(0);
-            if (tag.ftcPose == null) {
-                return;
+            if (tag.ftcPose != null) {
+                if (tag.id == 20) {
+                    double a = tag.ftcPose.bearing;
+                    int target = (int) (a * n);
+                    rotate.setTargetPosition(target);
+                    rotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    rotate.setPower(0.25);
+                    telemetry.addLine("Esti prost");
+                    telemetry.addData("Angle",a);
+                    telemetry.addData("Target",target);
             }
-            if (tag.id == 20) {
-                double a = tag.ftcPose.bearing;
-                int target = (int) (a * n);
-                rotate.setTargetPosition(target);
-                rotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                rotate.setPower(0.25);
-
-
             }
         }
-
     }
-
-
-
 
 }

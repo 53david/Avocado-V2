@@ -11,6 +11,7 @@ import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevnext;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -47,6 +48,7 @@ public class Outake {
         this.telemetry = telemetry;
         shoot1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shoot2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shoot1.setDirection(DcMotorSimple.Direction.REVERSE);
         shoot1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shoot2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shoot1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,coefsf);
