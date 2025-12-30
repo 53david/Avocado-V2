@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 
+import com.bylazar.telemetry.PanelsTelemetry;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,9 +9,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
@@ -29,20 +31,33 @@ public class Teleop extends LinearOpMode {
 
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Vision vision;
     private Outake outake; Servo transfer; private Storage storage;
+    private NormalizedColorSensor colorSensor;
     private VisionPortal visionPortal;
     private AprilTagProcessor tagProcessor;
-    public static PIDCoefficients coefs = new PIDCoefficients(0.2 ,0, 0.001);
+    public static PIDCoefficients coefs = new PIDCoefficients(0.4 ,0, 0.002);
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
     WebcamName webcam1;
     RevColorSensorV3 colorSensor1,colorSensor2;
-
-    public static boolean next = false,prevnext = false;
-
-    public static Gamepad prevgm1,prevgm2;
-    public static Gamepad gm1,gm2;
+    public static PanelsTelemetry telemetry1;
 
     @Override
+    public void updateTelemetry(Telemetry telemetry) {
+        super.updateTelemetry(telemetry);
+    }
+    public static PanelsTelemetry getTelemetry1() {
+        return telemetry1;
+    }
+
+    public static void setTelemetry1(PanelsTelemetry telemetry1) {
+        Teleop.telemetry1 = telemetry1;
+    }
+
+    public static boolean next = false,prevnext = false;
+    public static Gamepad prevgm1,prevgm2;
+    public static Gamepad gm1,gm2;
+    @Override
     public void runOpMode() throws InterruptedException {
+
         initializeHardware();
         prevgm1 = new Gamepad();
         prevgm2 = new Gamepad();
@@ -52,14 +67,14 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
             gm1.copy(gamepad1);
             gm2.copy(gamepad2);
-            outake.update();
-            outake.shooter();
-            chassis.drive();
-            intake.update();
+            ///outake.update();
+            ///outake.shooter();
+            ///chassis.drive();
+
             storage.update();
-            storage.TakeBall();
+            storage.Index();
             telemetry.update();
-            vision.update();
+            ///vision.update();
             prevgm1.copy(gm1);
             prevgm2.copy(gm2);
 
@@ -84,12 +99,14 @@ public class Teleop extends LinearOpMode {
         shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
         webcam1 = hardwareMap.get(WebcamName.class,"webcam1");
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class,"colorSensor");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor);
         outake = new Outake(shoot1,shoot2,rotate,transfer,telemetry);
-        storage = new Storage(servo,shoot1,intakeMotor);
+        storage = new Storage(servo,shoot1,intakeMotor,colorSensor,telemetry);
         vision = new Vision(rotate,webcam1);
         storage.turner.setPidCoefficients(coefs);
+
 
     }
 }

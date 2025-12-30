@@ -26,6 +26,7 @@ public class Vision {
         rotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        
         tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawTagOutline(true)
@@ -43,7 +44,6 @@ public class Vision {
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .enableLiveView(true)
                 .build();
-
     }
 
     public void update() {
