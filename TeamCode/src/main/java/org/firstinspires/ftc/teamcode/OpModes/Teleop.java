@@ -82,6 +82,7 @@ public class Teleop extends LinearOpMode {
 
     }
     private void initializeHardware() {
+
         servo = hardwareMap.get(CRServo.class,"servo");
         intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
@@ -106,7 +107,6 @@ public class Teleop extends LinearOpMode {
         storage = new Storage(servo,intakeMotor,intakeMotor,colorSensor,telemetry);
         vision = new Vision(rotate,webcam1,telemetry);
         storage.turner.setPidCoefficients(coefs);
-
 
     }
 }
