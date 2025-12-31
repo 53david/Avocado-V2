@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.OpModes;
+package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
@@ -28,7 +27,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @Autonomous (name = "Mascul Fioros")
-public class Auto extends LinearOpMode {
+public class CloseUpAuton extends LinearOpMode {
     private Follower follower;
     private Timer pTimer,opTimer;
     private ElapsedTime timer;
@@ -52,14 +51,7 @@ public class Auto extends LinearOpMode {
         ShootPos_Gate,
         Gate_ShootPos,
     }
-    public enum RobotState{
-        IDLE,
-        INTAKE,
-        SHOOT,
-        INDEX,
-    }
-    RobotState robotState;
-    PathState pathState;
+    private PathState pathState;
     private final Pose startPose = new Pose(21.53271028037383,122.69158878504673,Math.toRadians(143));
     private final Pose shootPose = new Pose(62.80373831775701,84.11214953271028,Math.toRadians(143));
     private final Pose ballPose = new Pose (13.906542056074766,83.21495327102804,Math.toRadians(182));
@@ -94,15 +86,11 @@ public class Auto extends LinearOpMode {
             case Start_ShootPos:
                 follower.followPath(StartShootPos,true);
                 if (!follower.isBusy()) {
-                    robotState = robotState.SHOOT;
-                }
-                else {
-                    robotState = robotState.IDLE;
+                    pathState = pathState.ShootPos_Ball1;
                 }
                 break;
             case ShootPos_Ball1:
                 follower.followPath(ShootBallPos,true);
-                robotState = robotState.INTAKE;
                 if (!follower.isBusy()) {
                     pathState = pathState.Ball1_ShootPos;
                 }
@@ -110,47 +98,23 @@ public class Auto extends LinearOpMode {
             case Ball1_ShootPos:
                 follower.followPath(BallShootPos,true);
                 if (!follower.isBusy()) {
-                    robotState = robotState.SHOOT;
+                    pathState = pathState.ShootPos_Gate;
                 }
-                else robotState = robotState.IDLE;
                 break;
             case ShootPos_Gate:
                 follower.followPath(ShootGatePos);
-                robotState = robotState.INTAKE;
+                if (!follower.isBusy()) {
+                    pathState = pathState.Gate_ShootPos;
+                }
                 break;
             case Gate_ShootPos:
                 follower.followPath(GateShootPos);
-                if (!follower.isBusy()){
-                    robotState = robotState.SHOOT;
-                }
-                else {
-                    robotState = robotState.IDLE;
+                if (!follower.isBusy()) {
+                    pathState = pathState.Gate_ShootPos;
                 }
                 break;
         }
-        switch (robotState){
-            case IDLE:
-                velocity = 200;
-                intakeMotor.setPower(0);
-                shoot1.setVelocity(velocity);
-                shoot2.setVelocity(velocity);
-                nr = 0;
-                timer.reset();
-                break;
-            case INDEX:
-                if (nr<1){
-                    storage.Turn120();
-                }
-                nr++;
-                break;
-            case SHOOT:
-                velocity = 1600;
-                if (timer.milliseconds()>500)
-                    outake.activate();
-                shoot1.setVelocity(velocity);
-                shoot2.setVelocity(velocity);
 
-        }
     }
 
     @Override
