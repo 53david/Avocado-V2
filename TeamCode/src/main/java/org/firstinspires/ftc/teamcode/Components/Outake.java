@@ -84,6 +84,14 @@ public class Outake {
         rotate.setPower(gm2.right_stick_x*0.33);
 
     }
+    public void activate(){
+        if (timer.milliseconds()<500)
+            servo.setPosition(0);
+        else {
+            servo.setPosition(0.95);
+            timer.reset();
+        }
+    }
 
 
 
