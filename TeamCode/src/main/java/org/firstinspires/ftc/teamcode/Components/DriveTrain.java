@@ -1,22 +1,17 @@
 package org.firstinspires.ftc.teamcode.Components;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 public class DriveTrain {
-    private final DcMotorEx leftFront, rightFront, leftBack, rightBack;
-    Servo transfer; ElapsedTime timer1 = new ElapsedTime();
-    ElapsedTime timer2 = new ElapsedTime();
+    private DcMotorEx leftFront, rightFront, leftBack, rightBack;
     boolean ok;
     public DriveTrain(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack) {
 
@@ -31,35 +26,25 @@ public class DriveTrain {
         rightBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
     }
+    public void init(HardwareMap hwMap){
+        leftFront = hwMap.get(DcMotorEx.class,"leftFront");
+        rightFront = hwMap.get(DcMotorEx.class,"rightFront");
+        leftBack = hwMap.get(DcMotorEx.class,"leftBack");
+        rightBack = hwMap.get(DcMotorEx.class,"rightBack");
+        MotorConfigurationType m= leftFront.getMotorType();
+        m.setAchieveableMaxRPMFraction(1);
+        leftFront.setMotorType(m);
+        rightFront.setMotorType(m);
+        leftBack.setMotorType(m);
+        rightBack.setMotorType(m);
 
-    public void test(Gamepad Gamepad1){
-        boolean x = Gamepad1.square;
-        boolean x1 = Gamepad1.circle;
-        boolean x2 = Gamepad1.cross;
-        boolean x3 = Gamepad1.triangle;
-
-        int y = x? 1:0;
-        int y1= x1? 1:0;
-        int y2 = x2? 1:0;
-        int y3= x3? 1:0;
-
-        leftFront.setPower(y);
-        leftBack.setPower(y1);
-        rightFront.setPower(y2);
-        rightBack.setPower(y3);
     }
-    public void scale(double x){
-        if (x>=0.3){
-            x=1;
-        }
-        else return;
-    }
-    public void drive() {
+
+    public void update() {
 
         double y = -gm1.left_stick_y;
         double x = gm1.left_stick_x*1.1;
         double rx = gm1.right_trigger-gm1.left_trigger;
-        scale(x);scale(y);scale(rx);
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx)/ denominator;
         double backLeftPower = (y - x + rx) / denominator;
@@ -70,11 +55,17 @@ public class DriveTrain {
         rightFront.setPower(frontRightPower);
         rightBack.setPower(backRightPower);
     }
-    public void Strafe (){
+    public void StrafeRight (){
         leftFront.setPower(-1);
         leftBack.setPower(1);
         rightFront.setPower(1);
         rightBack.setPower(-1);
+    }
+    public void StrafeLeft(){
+        leftFront.setPower(1);
+        leftBack.setPower(-1);
+        rightFront.setPower(-1);
+        rightBack.setPower(1);
     }
     public void BackWards(){
         leftFront.setPower(-1);

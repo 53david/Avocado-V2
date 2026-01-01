@@ -1,29 +1,17 @@
 package org.firstinspires.ftc.teamcode.Components;
 
 
-import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm2;
-import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
-import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm2;
-import static org.firstinspires.ftc.teamcode.OpModes.Teleop.vision;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.OpModes.Teleop;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
-import java.util.ArrayList;
 
 public class Outake {
     private Telemetry telemetry; ElapsedTime timer = new ElapsedTime();
@@ -50,7 +38,14 @@ public class Outake {
         shoot1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shoot2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+    public void init(HardwareMap hwMap){
 
+        shoot1 = hwMap.get(DcMotorEx.class,"shoot1");
+        shoot2 = hwMap.get(DcMotorEx.class,"shoot2");
+        rotate = hwMap.get(DcMotorEx.class,"rotate");
+        servo = hwMap.get(Servo.class,"transfer");
+
+    }
     public void update() {
         if (gm2.circleWasPressed()) {
             servo.setPosition(0);

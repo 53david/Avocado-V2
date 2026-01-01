@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Components;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
-import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -9,9 +8,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -39,18 +38,21 @@ public class Storage {
 
      private DcMotorEx motor;
 
-    public Storage (CRServo revolver, DcMotorEx encoder, DcMotorEx motor, NormalizedColorSensor colorSensor, Telemetry telemetry){
+    public Storage (CRServo revolver, DcMotorEx encoder, NormalizedColorSensor colorSensor, Telemetry telemetry){
         this.revolver = revolver;
         this.colorSensor=colorSensor;
         this.telemetry=telemetry;
+        this.encoder = encoder;
         colorSensor.setGain(x);
         state = ColorState.IDLE;
-        this.encoder = encoder;
-        this.motor = motor;
         encoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turner = new PIDController(0,0,0);
         revolver.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+    public void init(HardwareMap hwMap){
+        revolver = hwMap.get(CRServo.class,"servo");
+        colorSensor = hwMap.get(NormalizedColorSensor.class,"colorSensor");
     }
 
     public double FromTicksToDegrees(){
@@ -97,6 +99,7 @@ public class Storage {
                 if (timer.milliseconds()>1900){
                     timer.reset();
                     state = state.IDLE;
+                    nr = 0;
                 }
                 break;
         }

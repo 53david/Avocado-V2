@@ -5,7 +5,6 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -13,7 +12,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -21,15 +19,13 @@ import org.firstinspires.ftc.teamcode.Components.DriveTrain;
 import org.firstinspires.ftc.teamcode.Components.Intake;
 import org.firstinspires.ftc.teamcode.Components.Outake;
 import org.firstinspires.ftc.teamcode.Components.Storage;
-import org.firstinspires.ftc.teamcode.Components.Vision;
+import org.firstinspires.ftc.teamcode.Components.Turret;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-@Autonomous (name = "Mascul Fioros")
-public class CloseUpAuton extends LinearOpMode {
+@Autonomous (name = "Mascul Fioros BLUE")
+public class CloseUpAutonBlue extends LinearOpMode {
     private Follower follower;
-    private DriveTrain chassis; private Intake intake; private CRServo servo; public static Vision vision;
+    private DriveTrain chassis; private Intake intake; private CRServo servo; public static Turret turret;
     private Outake outake; Servo transfer; private Storage storage; ElapsedTime robotTimer,pathTimer; private NormalizedColorSensor colorSensor;
     Timer timer2;
     public static PIDCoefficients coefs = new PIDCoefficients(0.4 ,0, 0.002);
@@ -190,29 +186,18 @@ public class CloseUpAuton extends LinearOpMode {
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         pathState = pathState.Start_ShootPos;
-        servo = hardwareMap.get(CRServo.class,"servo");
-        intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
-        leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
-        rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
-        leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
-        rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
-        MotorConfigurationType m= leftFront.getMotorType();
-        m.setAchieveableMaxRPMFraction(1);
-        leftFront.setMotorType(m);
-        rightFront.setMotorType(m);
-        leftBack.setMotorType(m);
-        rightFront.setMotorType(m);
         transfer = hardwareMap.get(Servo.class,"transfer");
         shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
         shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
         webcam1 = hardwareMap.get(WebcamName.class,"webcam1");
-        colorSensor = hardwareMap.get(NormalizedColorSensor.class,"colorSensor");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
+        chassis.init(hardwareMap);
         intake = new Intake(intakeMotor);
         outake = new Outake(shoot1,shoot2,rotate,transfer,telemetry);
-        storage = new Storage(servo,intakeMotor,intakeMotor,colorSensor,telemetry);
-        vision = new Vision(rotate,webcam1,telemetry);
+        storage = new Storage(servo,intakeMotor,colorSensor,telemetry);
+        storage.init(hardwareMap);
+        turret = new Turret(rotate,webcam1,telemetry);
         storage.turner.setPidCoefficients(coefs);
 
     }

@@ -4,6 +4,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -11,7 +12,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -19,38 +19,41 @@ import org.firstinspires.ftc.teamcode.Components.DriveTrain;
 import org.firstinspires.ftc.teamcode.Components.Intake;
 import org.firstinspires.ftc.teamcode.Components.Outake;
 import org.firstinspires.ftc.teamcode.Components.Storage;
-import org.firstinspires.ftc.teamcode.Components.Vision;
+import org.firstinspires.ftc.teamcode.Components.Turret;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous (name = "Mascul Inflacarat")
-public class FarAuton extends LinearOpMode {
+@Autonomous(name = "Mascul Fioros RED")
+public class CloseUpAutonRed extends LinearOpMode {
     private Follower follower;
-    private DriveTrain chassis; private Intake intake; private CRServo servo; public static Vision vision;
-    private Outake outake; Servo transfer; private Storage storage;
-    ElapsedTime pathTimer,robotTimer;
-    private NormalizedColorSensor colorSensor;
-    double velocity = 200,power = 0.5; int xball = 0;
+    private DriveTrain chassis; private Intake intake; private CRServo servo; public static Turret turret;
+    private Outake outake; Servo transfer; private Storage storage; ElapsedTime robotTimer,pathTimer; private NormalizedColorSensor colorSensor;
+    Timer timer2;
     public static PIDCoefficients coefs = new PIDCoefficients(0.4 ,0, 0.002);
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
-    private final Pose startPose = new Pose(62.30204081632653,9.11020408163265,Math.toRadians(90));
-    private final Pose shootPose = new Pose(62.30204081632653,24.97959183673469,Math.toRadians(115));
-    private final Pose ballPose = new Pose(22.628571428571426,35.85306122448979,Math.toRadians(180));
-    private final Pose playerPose = new Pose(9.69795918367347,10.873469387755105,Math.toRadians(200));
-    private PathChain StartShootPos,ShootBallPos,BallShootPos,ShootPlayerPos,PlayerShootPos;
+    WebcamName webcam1;
+    double velocity = 200, power = 0.5;
+    int xball = 0;
     public enum PathState{
-        Start_Shoot,
-        Shoot_Ball,
-        Ball_Shoot,
-        Shoot_Player,
-        Player_Shoot,
+        Start_ShootPos,
+        ShootPos_Ball1,
+        Ball1_ShootPos,
+        ShootPos_Gate,
+        Gate_ShootPos,
     }
     public enum RobotState{
         INTAKE,
         SHOOT,
         IDLE,
     }
-    private RobotState robotState;
     private PathState pathState;
+    private RobotState robotState;
+    private final Pose startPose = new Pose(121.94392523364486,124.41121495327104,Math.toRadians(37));
+    private final Pose shootPose = new Pose(82.01869158878506,85.57009345794393,Math.toRadians(37));
+    private final Pose ballPose = new Pose (125.41121495327104,83.21495327102804,Math.toRadians(0));
+    private final Pose gatePose = new Pose(131.84112149532712,64.82242990654204,Math.toRadians(15));
+    private final Pose parkPose = new Pose(30.72897196261682,93.53271028037383,Math.toRadians(143));
+
+    private PathChain StartShootPos,ShootBallPos,BallShootPos,ShootGatePos,GateShootPos;
     public void buildPaths(){
         StartShootPos = follower.pathBuilder()
                 .addPath(new BezierLine(startPose,shootPose))
@@ -64,73 +67,75 @@ public class FarAuton extends LinearOpMode {
                 .addPath(new BezierLine(ballPose,shootPose))
                 .setLinearHeadingInterpolation(ballPose.getHeading(),shootPose.getHeading())
                 .build();
-        ShootPlayerPos = follower.pathBuilder()
-                .addPath(new BezierLine(shootPose,playerPose))
-                .setLinearHeadingInterpolation(shootPose.getHeading(),playerPose.getHeading())
+        ShootGatePos = follower.pathBuilder()
+                .addPath(new BezierLine(shootPose,gatePose))
+                .setLinearHeadingInterpolation(shootPose.getHeading(),gatePose.getHeading())
                 .build();
-        PlayerShootPos = follower.pathBuilder()
-                .addPath(new BezierLine(playerPose,shootPose))
-                .setLinearHeadingInterpolation(playerPose.getHeading(),shootPose.getHeading())
+        GateShootPos = follower.pathBuilder()
+                .addPath(new BezierLine(gatePose,shootPose))
+                .setLinearHeadingInterpolation(gatePose.getHeading(),shootPose.getHeading())
                 .build();
     }
-    public void pathUpdate(){
+    public void pathUpdate (){
         switch (pathState){
-            case Start_Shoot:
+            case Start_ShootPos:
                 follower.followPath(StartShootPos,true);
-                if (!follower.isBusy()){
-                    robotState = robotState.SHOOT;
-                    if (pathTimer.milliseconds()>5000){
-                        pathState = pathState.Shoot_Ball;
-                    }
-                }
-                else {
-                    robotState = robotState.IDLE;
-                    pathTimer.reset();
-                }
-                break;
-            case Shoot_Ball:
-                follower.followPath(ShootBallPos,true);
-                robotState = robotState.INTAKE;
-                if (!follower.isBusy()){
-                    pathState = pathState.Ball_Shoot;
-                    pathTimer.reset();
-                }
-                break;
-            case Ball_Shoot:
-                follower.followPath(BallShootPos,true);
-                if (!follower.isBusy()){
+                if (!follower.isBusy()) {
                     robotState = robotState.SHOOT;
                     if (pathTimer.milliseconds()>5000) {
-                        pathState = pathState.Shoot_Player;
+                        pathState = pathState.ShootPos_Ball1;
                     }
                 }
                 else {
-                    pathTimer.reset();
                     robotState = robotState.IDLE;
+                    pathTimer.reset();
                 }
                 break;
-            case Shoot_Player:
+            case ShootPos_Ball1:
                 follower.followPath(ShootBallPos,true);
                 robotState = robotState.INTAKE;
-                if (!follower.isBusy()){
-                    pathState = pathState.Player_Shoot;
+                if (!follower.isBusy()) {
+                    pathState = pathState.Ball1_ShootPos;
                     pathTimer.reset();
                 }
+
                 break;
-            case Player_Shoot:
-                follower.followPath(PlayerShootPos,true);
-                if (!follower.isBusy()){
+            case Ball1_ShootPos:
+                follower.followPath(BallShootPos,true);
+                if (!follower.isBusy()) {
                     robotState = robotState.SHOOT;
-                    if (pathTimer.milliseconds()>5000 ) {
-                        pathState = pathState.Shoot_Player;
+                    if (pathTimer.milliseconds()>5000) {
+                        pathState = pathState.ShootPos_Gate;
                     }
                 }
                 else {
-                    pathTimer.reset();
                     robotState = robotState.IDLE;
+                    pathTimer.reset();
+                }
+                break;
+            case ShootPos_Gate:
+                follower.followPath(ShootGatePos);
+                robotState = robotState.INTAKE;
+                if (!follower.isBusy()) {
+                    pathState = pathState.Gate_ShootPos;
+                    pathTimer.reset();
+                }
+                break;
+            case Gate_ShootPos:
+                follower.followPath(GateShootPos);
+                if (!follower.isBusy()) {
+                    robotState = robotState.SHOOT;
+                    if (pathTimer.milliseconds()>5000) {
+                        pathState = pathState.Gate_ShootPos;
+                    }
+                }
+                else {
+                    robotState =robotState.IDLE;
+                    pathTimer.reset();
                 }
                 break;
         }
+
     }
     public void robotUpdate(){
 
@@ -164,45 +169,30 @@ public class FarAuton extends LinearOpMode {
                 break;
         }
     }
-    public void robotState(){
 
-    }
     @Override
     public void runOpMode(){
         waitForStart();
         hardwinit();
         while (opModeIsActive()){
+            follower.update();
             pathUpdate();
             robotUpdate();
-            follower.update();
         }
     }
     public void hardwinit(){
-
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
-        pathState = pathState.Start_Shoot;
-        servo = hardwareMap.get(CRServo.class,"servo");
-        intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
-        leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
-        rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
-        leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
-        rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
-        MotorConfigurationType m= leftFront.getMotorType();
-        m.setAchieveableMaxRPMFraction(1);
-        leftFront.setMotorType(m);
-        rightFront.setMotorType(m);
-        leftBack.setMotorType(m);
-        rightFront.setMotorType(m);
-        transfer = hardwareMap.get(Servo.class,"transfer");
-        shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
-        shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
-        rotate = hardwareMap.get(DcMotorEx.class,"rotate");
-        colorSensor = hardwareMap.get(NormalizedColorSensor.class,"colorSensor");
+        pathState = pathState.Start_ShootPos;
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor);
         outake = new Outake(shoot1,shoot2,rotate,transfer,telemetry);
-        storage = new Storage(servo,intakeMotor,intakeMotor,colorSensor,telemetry);
+        storage = new Storage(servo,intakeMotor,colorSensor,telemetry);
+        turret = new Turret(rotate,webcam1,telemetry);
+        chassis.init(hardwareMap);
+        intake.init(hardwareMap);
+        outake.init(hardwareMap);
+        storage.init(hardwareMap);
         storage.turner.setPidCoefficients(coefs);
     }
 }
