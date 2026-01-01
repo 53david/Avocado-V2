@@ -30,11 +30,13 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 public class CloseUpAuton extends LinearOpMode {
     private Follower follower;
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Vision vision;
-    private Outake outake; Servo transfer; private Storage storage;
+    private Outake outake; Servo transfer; private Storage storage; ElapsedTime robotTimer,pathTimer;
+    Timer timer2;
     public static PIDCoefficients coefs = new PIDCoefficients(0.4 ,0, 0.002);
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
     WebcamName webcam1;
-
+    double velocity = 200, power = 0.5;
+    int xball = 0;
     public enum PathState{
         Start_ShootPos,
         ShootPos_Ball1,
@@ -42,7 +44,13 @@ public class CloseUpAuton extends LinearOpMode {
         ShootPos_Gate,
         Gate_ShootPos,
     }
+    public enum RobotState{
+        INTAKE,
+        SHOOT,
+        IDLE,
+    }
     private PathState pathState;
+    private RobotState robotState;
     private final Pose startPose = new Pose(21.53271028037383,122.69158878504673,Math.toRadians(143));
     private final Pose shootPose = new Pose(62.80373831775701,84.11214953271028,Math.toRadians(143));
     private final Pose ballPose = new Pose (13.906542056074766,83.21495327102804,Math.toRadians(182));
@@ -72,40 +80,98 @@ public class CloseUpAuton extends LinearOpMode {
                 .setLinearHeadingInterpolation(gatePose.getHeading(),shootPose.getHeading())
                 .build();
     }
-    public void stateUpdate (){
+    public void pathUpdate (){
         switch (pathState){
             case Start_ShootPos:
                 follower.followPath(StartShootPos,true);
                 if (!follower.isBusy()) {
-                    pathState = pathState.ShootPos_Ball1;
+                    robotState = robotState.SHOOT;
+                    if (pathTimer.milliseconds()>5000) {
+                        pathState = pathState.ShootPos_Ball1;
+                    }
+                }
+                else {
+                    robotState = robotState.IDLE;
+                    pathTimer.reset();
                 }
                 break;
             case ShootPos_Ball1:
                 follower.followPath(ShootBallPos,true);
+                robotState = robotState.INTAKE;
                 if (!follower.isBusy()) {
                     pathState = pathState.Ball1_ShootPos;
+                    pathTimer.reset();
                 }
+
                 break;
             case Ball1_ShootPos:
                 follower.followPath(BallShootPos,true);
                 if (!follower.isBusy()) {
-                    pathState = pathState.ShootPos_Gate;
+                    robotState = robotState.SHOOT;
+                    if (pathTimer.milliseconds()>5000) {
+                        pathState = pathState.ShootPos_Gate;
+                    }
+                }
+                else {
+                    robotState = robotState.IDLE;
+                    pathTimer.reset();
                 }
                 break;
             case ShootPos_Gate:
                 follower.followPath(ShootGatePos);
+                robotState = robotState.INTAKE;
                 if (!follower.isBusy()) {
                     pathState = pathState.Gate_ShootPos;
+                    pathTimer.reset();
                 }
                 break;
             case Gate_ShootPos:
                 follower.followPath(GateShootPos);
                 if (!follower.isBusy()) {
-                    pathState = pathState.Gate_ShootPos;
+                    robotState = robotState.SHOOT;
+                    if (pathTimer.milliseconds()>5000) {
+                        pathState = pathState.Gate_ShootPos;
+                    }
+                }
+                else {
+                    robotState =robotState.IDLE;
+                    pathTimer.reset();
                 }
                 break;
         }
 
+    }
+    public void robotUpdate(){
+
+        shoot1.setVelocity(velocity);
+        shoot2.setVelocity(velocity);
+        intakeMotor.setPower(power);
+
+        switch (robotState){
+            case IDLE:
+                velocity = 200;
+                power = 0.5;
+                robotTimer.reset();
+                xball = 0;
+                break;
+            case SHOOT:
+                velocity = 1600;
+                power = 0.5;
+                if (robotTimer.milliseconds()>1000 && xball<3) {
+                    outake.activate(); xball++;
+                    robotTimer.reset();
+                }
+                else if (xball == 3){
+                    robotState = robotState.IDLE;
+                }
+                break;
+            case INTAKE:
+                velocity = 200;
+                power = 1;
+                robotTimer.reset();
+                xball = 0;
+                break;
+        }
     }
 
     @Override
@@ -113,7 +179,8 @@ public class CloseUpAuton extends LinearOpMode {
         waitForStart();
         hardwinit();
         while (opModeIsActive()){
-            stateUpdate();
+            pathUpdate();
+            robotUpdate();
             follower.update();
         }
 

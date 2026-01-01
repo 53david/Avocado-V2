@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Components.DriveTrain;
@@ -26,7 +27,9 @@ public class FarAuton extends LinearOpMode {
     private Follower follower;
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Vision vision;
     private Outake outake; Servo transfer; private Storage storage;
+    ElapsedTime pathTimer,robotTimer;
     private NormalizedColorSensor colorSensor;
+    double velocity = 200,power = 0.5; int xball = 0;
     public static PIDCoefficients coefs = new PIDCoefficients(0.4 ,0, 0.002);
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
     private final Pose startPose = new Pose(62.30204081632653,9.11020408163265,Math.toRadians(90));
@@ -41,6 +44,12 @@ public class FarAuton extends LinearOpMode {
         Shoot_Player,
         Player_Shoot,
     }
+    public enum RobotState{
+        INTAKE,
+        SHOOT,
+        IDLE,
+    }
+    private RobotState robotState;
     private PathState pathState;
     public void buildPaths(){
         StartShootPos = follower.pathBuilder()
@@ -64,45 +73,106 @@ public class FarAuton extends LinearOpMode {
                 .setLinearHeadingInterpolation(playerPose.getHeading(),shootPose.getHeading())
                 .build();
     }
-    public void stateUpdate(){
+    public void pathUpdate(){
         switch (pathState){
             case Start_Shoot:
                 follower.followPath(StartShootPos,true);
                 if (!follower.isBusy()){
-
+                    robotState = robotState.SHOOT;
+                    if (pathTimer.milliseconds()>5000){
+                        pathState = pathState.Shoot_Ball;
+                    }
+                }
+                else {
+                    robotState = robotState.IDLE;
+                    pathTimer.reset();
                 }
                 break;
             case Shoot_Ball:
                 follower.followPath(ShootBallPos,true);
+                robotState = robotState.INTAKE;
                 if (!follower.isBusy()){
                     pathState = pathState.Ball_Shoot;
+                    pathTimer.reset();
                 }
+                break;
             case Ball_Shoot:
                 follower.followPath(BallShootPos,true);
                 if (!follower.isBusy()){
-                    pathState = pathState.Shoot_Player;
+                    robotState = robotState.SHOOT;
+                    if (pathTimer.milliseconds()>5000) {
+                        pathState = pathState.Shoot_Player;
+                    }
+                }
+                else {
+                    pathTimer.reset();
+                    robotState = robotState.IDLE;
                 }
                 break;
             case Shoot_Player:
                 follower.followPath(ShootBallPos,true);
+                robotState = robotState.INTAKE;
                 if (!follower.isBusy()){
                     pathState = pathState.Player_Shoot;
+                    pathTimer.reset();
                 }
                 break;
             case Player_Shoot:
                 follower.followPath(PlayerShootPos,true);
                 if (!follower.isBusy()){
+                    robotState = robotState.SHOOT;
+                    if (pathTimer.milliseconds()>5000)
                     pathState = pathState.Shoot_Player;
+                }
+                else {
+                    pathTimer.reset();
+                    robotState = robotState.IDLE;
                 }
                 break;
         }
+    }
+    public void robotUpdate(){
+
+        shoot1.setVelocity(velocity);
+        shoot2.setVelocity(velocity);
+        intakeMotor.setPower(power);
+
+        switch (robotState){
+            case IDLE:
+                velocity = 200;
+                power = 0.5;
+                robotTimer.reset();
+                xball = 0;
+                break;
+            case SHOOT:
+                velocity = 1600;
+                power = 0.5;
+                if (robotTimer.milliseconds()>1000 && xball<3) {
+                    outake.activate(); xball++;
+                    robotTimer.reset();
+                }
+                else if (xball == 3){
+                    robotState = robotState.IDLE;
+                }
+                break;
+            case INTAKE:
+                velocity = 200;
+                power = 1;
+                robotTimer.reset();
+                xball = 0;
+                break;
+        }
+    }
+    public void robotState(){
+
     }
     @Override
     public void runOpMode(){
         waitForStart();
         hardwinit();
         while (opModeIsActive()){
-            stateUpdate();
+            pathUpdate();
+            robotUpdate();
             follower.update();
         }
     }
