@@ -78,56 +78,56 @@ public class FarAutonBlue extends LinearOpMode {
             case Start_Shoot:
                 follower.followPath(StartShootPos,true);
                 if (!follower.isBusy()){
-                    robotState = robotState.SHOOT;
+                    robotState = RobotState.SHOOT;
                     if (pathTimer.milliseconds()>5000){
-                        pathState = pathState.Shoot_Ball;
+                        pathState = PathState.Shoot_Ball;
                     }
                 }
                 else {
-                    robotState = robotState.IDLE;
+                    robotState = RobotState.IDLE;
                     pathTimer.reset();
                 }
                 break;
             case Shoot_Ball:
                 follower.followPath(ShootBallPos,true);
-                robotState = robotState.INTAKE;
+                robotState = RobotState.INTAKE;
                 if (!follower.isBusy()){
-                    pathState = pathState.Ball_Shoot;
+                    pathState = PathState.Ball_Shoot;
                     pathTimer.reset();
                 }
                 break;
             case Ball_Shoot:
                 follower.followPath(BallShootPos,true);
                 if (!follower.isBusy()){
-                    robotState = robotState.SHOOT;
+                    robotState = RobotState.SHOOT;
                     if (pathTimer.milliseconds()>5000) {
-                        pathState = pathState.Shoot_Player;
+                        pathState = PathState.Shoot_Player;
                     }
                 }
                 else {
                     pathTimer.reset();
-                    robotState = robotState.IDLE;
+                    robotState = RobotState.IDLE;
                 }
                 break;
             case Shoot_Player:
                 follower.followPath(ShootPlayerPos,true);
-                robotState = robotState.INTAKE;
+                robotState = RobotState.INTAKE;
                 if (!follower.isBusy()){
-                    pathState = pathState.Player_Shoot;
+                    pathState = PathState.Player_Shoot;
                     pathTimer.reset();
                 }
                 break;
             case Player_Shoot:
                 follower.followPath(PlayerShootPos,true);
                 if (!follower.isBusy()){
-                    robotState = robotState.SHOOT;
+                    robotState = RobotState.SHOOT;
                     if (pathTimer.milliseconds()>5000 ) {
-                        pathState = pathState.Shoot_Player;
+                        pathState = PathState.Shoot_Player;
                     }
                 }
                 else {
                     pathTimer.reset();
-                    robotState = robotState.IDLE;
+                    robotState = RobotState.IDLE;
                 }
                 break;
         }
@@ -153,7 +153,7 @@ public class FarAutonBlue extends LinearOpMode {
                     robotTimer.reset();
                 }
                 else if (xball == 3){
-                    robotState = robotState.IDLE;
+                    robotState = RobotState.IDLE;
                 }
                 break;
             case INTAKE:
@@ -178,7 +178,7 @@ public class FarAutonBlue extends LinearOpMode {
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
-        pathState = pathState.Start_Shoot;
+        pathState = PathState.Start_Shoot;
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor);
         outake = new Outake(shoot1,shoot2,rotate,transfer,telemetry);
