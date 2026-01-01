@@ -7,8 +7,6 @@ import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm2;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.vision;
 
-import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevnext;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
