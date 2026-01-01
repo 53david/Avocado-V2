@@ -11,16 +11,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Components.DriveTrain;
 import org.firstinspires.ftc.teamcode.Components.Intake;
 import org.firstinspires.ftc.teamcode.Components.Outake;
 import org.firstinspires.ftc.teamcode.Components.Storage;
 import org.firstinspires.ftc.teamcode.Components.Vision;
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "Mascul Retardat")
-public class RetardedAutonomous extends LinearOpMode {
+@Autonomous(name = "Mascul Nestiutor")
+public class NoLocalizerAuton extends LinearOpMode {
     private Follower follower;
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Vision vision;
     private Outake outake; Servo transfer; private Storage storage; boolean ok1 = true,ok2 = true,ok3 = true;
@@ -36,6 +34,7 @@ public class RetardedAutonomous extends LinearOpMode {
         while (opModeIsActive()){
             shoot1.setPower(power);
             shoot2.setPower(power);
+            intakeMotor.setPower(0.5);
             if (timer.milliseconds()<350) {
                 chassis.BackWards();
             }

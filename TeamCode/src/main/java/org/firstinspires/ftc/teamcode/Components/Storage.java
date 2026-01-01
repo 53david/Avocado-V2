@@ -33,21 +33,11 @@ public class Storage {
         IDLE,
         GREEN,
         PURPLE,
-        MANUAL,
+        SHOOT,
     };
     ColorState state;
-    public enum IntakeState{
-        IDLE,
-        ACTIVE,
 
-    };
-    public enum StorageState{
-        BALL1,
-        BALL2,
-        BALL3,
-    }
-    StorageState state1 = StorageState.BALL1; private DcMotorEx motor;
-    IntakeState state2 = IntakeState.IDLE;
+     private DcMotorEx motor;
 
     public Storage (CRServo revolver, DcMotorEx encoder, DcMotorEx motor, NormalizedColorSensor colorSensor, Telemetry telemetry){
         this.revolver = revolver;
@@ -77,33 +67,46 @@ public class Storage {
         revolver.setPower(turner.calculatePower(FromTicksToDegrees()));
     }
     public void Index(){
-
+        control();
         getColor();
         switch (state){
             case IDLE:
                     telemetry.addLine("IDLE");
-                    nr=0;
                     timer.reset();
                 break;
             case GREEN:
                     telemetry.addLine("GREEN");
-                    Turn120();
+                    if (nr<3) {
+                        Turn120();
+                        nr++;
+                    }
                     state = state.IDLE;
                 break;
             case PURPLE:
                     telemetry.addLine("PURPLE");
-                    Turn120();
+                    if (nr<3) {
+                        Turn120();
+                        nr++;
+                    }
                     state = state.IDLE;
                 break;
-            case MANUAL:
-                    if (timer.milliseconds()>500){
-                        Turn120(); timer.reset();
-                        state = state.IDLE;
-                    }
+            case SHOOT:
+                if (timer.milliseconds() % 500 == 0){
+                    Turn120();
+                }
+                if (timer.milliseconds()>1900){
+                    timer.reset();
+                    state = state.IDLE;
+                }
                 break;
         }
         telemetry.update();
 
+    }
+    public void control(){
+        if (gm1.circleWasPressed()){
+            state = state.SHOOT;
+        }
     }
     public void getColor(){
         float red,green,blue;
