@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class Outake {
     private Telemetry telemetry; ElapsedTime timer = new ElapsedTime();
-    double P = 0, F = 0; double velocity;
+    double P = 0, F = 0, power; double velocity;
     public PIDFCoefficients coefsf = new PIDFCoefficients(P,0,0,F);
     private DcMotorEx shoot1, shoot2, rotate;
     private Servo servo;
@@ -44,12 +44,11 @@ public class Outake {
         this.rotate = rotate;
         this.servo = servo;
         this.telemetry = telemetry;
-        shoot1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shoot2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shoot1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shoot2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shoot1.setDirection(DcMotorSimple.Direction.REVERSE);
         shoot1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shoot2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        shoot1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,coefsf);
     }
 
     public void update() {
@@ -62,20 +61,20 @@ public class Outake {
     }
 
     public void shooter() {
-        shoot1.setVelocity(velocity);
-        shoot2.setVelocity(velocity);
+        shoot1.setPower(power);
+        shoot2.setPower(power);
         switch (state){
             case CLOSE:
                 telemetry.addLine("CLOSE");
                 if (gm2.squareWasPressed())
                     state=State.FAR;
-                velocity = 1600;
+                power = 0.60;
                 break;
             case FAR:
                 telemetry.addLine("FAR");
                 if (gm2.squareWasPressed())
                     state=State.CLOSE;
-                velocity = 2500;
+                power = 0.75;
                 break;
         }
         telemetry.update();

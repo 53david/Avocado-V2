@@ -70,6 +70,18 @@ public class DriveTrain {
         rightFront.setPower(frontRightPower);
         rightBack.setPower(backRightPower);
     }
+    public void Strafe (){
+        leftFront.setPower(-1);
+        leftBack.setPower(1);
+        rightFront.setPower(1);
+        rightBack.setPower(-1);
+    }
+    public void BackWards(){
+        leftFront.setPower(-1);
+        leftBack.setPower(-1);
+        rightFront.setPower(-1);
+        rightBack.setPower(-1);
+    }
 
 
 }

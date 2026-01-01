@@ -121,8 +121,9 @@ public class FarAuton extends LinearOpMode {
                 follower.followPath(PlayerShootPos,true);
                 if (!follower.isBusy()){
                     robotState = robotState.SHOOT;
-                    if (pathTimer.milliseconds()>5000)
-                    pathState = pathState.Shoot_Player;
+                    if (pathTimer.milliseconds()>5000 ) {
+                        pathState = pathState.Shoot_Player;
+                    }
                 }
                 else {
                     pathTimer.reset();
@@ -181,6 +182,7 @@ public class FarAuton extends LinearOpMode {
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         pathState = pathState.Start_Shoot;
+        servo = hardwareMap.get(CRServo.class,"servo");
         intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
         rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
@@ -192,6 +194,15 @@ public class FarAuton extends LinearOpMode {
         rightFront.setMotorType(m);
         leftBack.setMotorType(m);
         rightFront.setMotorType(m);
+        transfer = hardwareMap.get(Servo.class,"transfer");
+        shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
+        shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
+        rotate = hardwareMap.get(DcMotorEx.class,"rotate");
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class,"colorSensor");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
+        intake = new Intake(intakeMotor);
+        outake = new Outake(shoot1,shoot2,rotate,transfer,telemetry);
+        storage = new Storage(servo,intakeMotor,intakeMotor,colorSensor,telemetry);
+        storage.turner.setPidCoefficients(coefs);
     }
 }

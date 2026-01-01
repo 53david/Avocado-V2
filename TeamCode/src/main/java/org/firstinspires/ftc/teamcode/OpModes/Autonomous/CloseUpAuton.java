@@ -30,7 +30,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 public class CloseUpAuton extends LinearOpMode {
     private Follower follower;
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Vision vision;
-    private Outake outake; Servo transfer; private Storage storage; ElapsedTime robotTimer,pathTimer;
+    private Outake outake; Servo transfer; private Storage storage; ElapsedTime robotTimer,pathTimer; private NormalizedColorSensor colorSensor;
     Timer timer2;
     public static PIDCoefficients coefs = new PIDCoefficients(0.4 ,0, 0.002);
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
@@ -190,6 +190,7 @@ public class CloseUpAuton extends LinearOpMode {
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         pathState = pathState.Start_ShootPos;
+        servo = hardwareMap.get(CRServo.class,"servo");
         intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
         rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
@@ -201,7 +202,18 @@ public class CloseUpAuton extends LinearOpMode {
         rightFront.setMotorType(m);
         leftBack.setMotorType(m);
         rightFront.setMotorType(m);
+        transfer = hardwareMap.get(Servo.class,"transfer");
+        shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
+        shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
+        rotate = hardwareMap.get(DcMotorEx.class,"rotate");
+        webcam1 = hardwareMap.get(WebcamName.class,"webcam1");
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class,"colorSensor");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
+        intake = new Intake(intakeMotor);
+        outake = new Outake(shoot1,shoot2,rotate,transfer,telemetry);
+        storage = new Storage(servo,intakeMotor,intakeMotor,colorSensor,telemetry);
+        vision = new Vision(rotate,webcam1,telemetry);
+        storage.turner.setPidCoefficients(coefs);
 
     }
 }
