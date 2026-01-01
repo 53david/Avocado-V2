@@ -28,31 +28,12 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @TeleOp(name = "Mascul Feroce")
 public class Teleop extends LinearOpMode {
-
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Vision vision;
     private Outake outake; Servo transfer; private Storage storage;
     private NormalizedColorSensor colorSensor;
-    private VisionPortal visionPortal;
-    private AprilTagProcessor tagProcessor;
     public static PIDCoefficients coefs = new PIDCoefficients(0.4 ,0, 0.002);
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
     WebcamName webcam1;
-    RevColorSensorV3 colorSensor1,colorSensor2;
-    public static PanelsTelemetry telemetry1;
-
-    @Override
-    public void updateTelemetry(Telemetry telemetry) {
-        super.updateTelemetry(telemetry);
-    }
-    public static PanelsTelemetry getTelemetry1() {
-        return telemetry1;
-    }
-
-    public static void setTelemetry1(PanelsTelemetry telemetry1) {
-        Teleop.telemetry1 = telemetry1;
-    }
-
-    public static boolean next = false,prevnext = false;
     public static Gamepad prevgm1,prevgm2;
     public static Gamepad gm1,gm2;
     @Override
@@ -67,14 +48,14 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
             gm1.copy(gamepad1);
             gm2.copy(gamepad2);
-            ///outake.update();
-            ///outake.shooter();
-            ///chassis.drive();
-
+            outake.update();
+            outake.shooter();
+            chassis.drive();
+            intake.update();
             storage.update();
             storage.Index();
             telemetry.update();
-            ///vision.update();
+            vision.update();
             prevgm1.copy(gm1);
             prevgm2.copy(gm2);
 

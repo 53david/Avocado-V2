@@ -4,8 +4,6 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
-import com.pedropathing.util.Timer;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -14,7 +12,6 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Components.DriveTrain;
@@ -23,33 +20,28 @@ import org.firstinspires.ftc.teamcode.Components.Outake;
 import org.firstinspires.ftc.teamcode.Components.Storage;
 import org.firstinspires.ftc.teamcode.Components.Vision;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-@Autonomous (name = "Mascul Fioros")
-public class CloseUpAuton extends LinearOpMode {
+@Autonomous
+public class FarAuton extends LinearOpMode {
     private Follower follower;
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Vision vision;
     private Outake outake; Servo transfer; private Storage storage;
+    private NormalizedColorSensor colorSensor;
     public static PIDCoefficients coefs = new PIDCoefficients(0.4 ,0, 0.002);
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
-    WebcamName webcam1;
-
+    private final Pose startPose = new Pose(62.30204081632653,9.11020408163265,Math.toRadians(90));
+    private final Pose shootPose = new Pose(62.30204081632653,24.97959183673469,Math.toRadians(115));
+    private final Pose ballPose = new Pose(22.628571428571426,35.85306122448979,Math.toRadians(180));
+    private final Pose playerPose = new Pose(9.69795918367347,10.873469387755105,Math.toRadians(200));
+    private PathChain StartShootPos,ShootBallPos,BallShootPos,ShootPlayerPos,PlayerShootPos;
     public enum PathState{
-        Start_ShootPos,
-        ShootPos_Ball1,
-        Ball1_ShootPos,
-        ShootPos_Gate,
-        Gate_ShootPos,
+        Start_Shoot,
+        Shoot_Ball,
+        Ball_Shoot,
+        Shoot_Player,
+        Player_Shoot,
     }
     private PathState pathState;
-    private final Pose startPose = new Pose(21.53271028037383,122.69158878504673,Math.toRadians(143));
-    private final Pose shootPose = new Pose(62.80373831775701,84.11214953271028,Math.toRadians(143));
-    private final Pose ballPose = new Pose (13.906542056074766,83.21495327102804,Math.toRadians(182));
-    private final Pose gatePose = new Pose(13.457943925233645,64.82242990654204,Math.toRadians(200));
-    private final Pose parkPose = new Pose(30.72897196261682,93.53271028037383,Math.toRadians(143));
-
-    private PathChain StartShootPos,ShootBallPos,BallShootPos,ShootGatePos,GateShootPos;
     public void buildPaths(){
         StartShootPos = follower.pathBuilder()
                 .addPath(new BezierLine(startPose,shootPose))
@@ -63,51 +55,48 @@ public class CloseUpAuton extends LinearOpMode {
                 .addPath(new BezierLine(ballPose,shootPose))
                 .setLinearHeadingInterpolation(ballPose.getHeading(),shootPose.getHeading())
                 .build();
-        ShootGatePos = follower.pathBuilder()
-                .addPath(new BezierLine(shootPose,gatePose))
-                .setLinearHeadingInterpolation(shootPose.getHeading(),gatePose.getHeading())
+        ShootPlayerPos = follower.pathBuilder()
+                .addPath(new BezierLine(shootPose,playerPose))
+                .setLinearHeadingInterpolation(shootPose.getHeading(),playerPose.getHeading())
                 .build();
-        GateShootPos = follower.pathBuilder()
-                .addPath(new BezierLine(gatePose,shootPose))
-                .setLinearHeadingInterpolation(gatePose.getHeading(),shootPose.getHeading())
+        PlayerShootPos = follower.pathBuilder()
+                .addPath(new BezierLine(playerPose,shootPose))
+                .setLinearHeadingInterpolation(playerPose.getHeading(),shootPose.getHeading())
                 .build();
     }
-    public void stateUpdate (){
+    public void stateUpdate(){
         switch (pathState){
-            case Start_ShootPos:
+            case Start_Shoot:
                 follower.followPath(StartShootPos,true);
-                if (!follower.isBusy()) {
-                    pathState = pathState.ShootPos_Ball1;
+                if (!follower.isBusy()){
+
                 }
                 break;
-            case ShootPos_Ball1:
+            case Shoot_Ball:
                 follower.followPath(ShootBallPos,true);
-                if (!follower.isBusy()) {
-                    pathState = pathState.Ball1_ShootPos;
+                if (!follower.isBusy()){
+                    pathState = pathState.Ball_Shoot;
                 }
-                break;
-            case Ball1_ShootPos:
+            case Ball_Shoot:
                 follower.followPath(BallShootPos,true);
-                if (!follower.isBusy()) {
-                    pathState = pathState.ShootPos_Gate;
+                if (!follower.isBusy()){
+                    pathState = pathState.Shoot_Player;
                 }
                 break;
-            case ShootPos_Gate:
-                follower.followPath(ShootGatePos);
-                if (!follower.isBusy()) {
-                    pathState = pathState.Gate_ShootPos;
+            case Shoot_Player:
+                follower.followPath(ShootBallPos,true);
+                if (!follower.isBusy()){
+                    pathState = pathState.Player_Shoot;
                 }
                 break;
-            case Gate_ShootPos:
-                follower.followPath(GateShootPos);
-                if (!follower.isBusy()) {
-                    pathState = pathState.Gate_ShootPos;
+            case Player_Shoot:
+                follower.followPath(PlayerShootPos,true);
+                if (!follower.isBusy()){
+                    pathState = pathState.Shoot_Player;
                 }
                 break;
         }
-
     }
-
     @Override
     public void runOpMode(){
         waitForStart();
@@ -116,13 +105,12 @@ public class CloseUpAuton extends LinearOpMode {
             stateUpdate();
             follower.update();
         }
-
     }
     public void hardwinit(){
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
-        pathState = pathState.Start_ShootPos;
+        pathState = pathState.Start_Shoot;
         intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
         rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
@@ -135,6 +123,5 @@ public class CloseUpAuton extends LinearOpMode {
         leftBack.setMotorType(m);
         rightFront.setMotorType(m);
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
-
     }
 }
