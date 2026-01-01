@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Components.Storage;
 import org.firstinspires.ftc.teamcode.Components.Vision;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous
+@Autonomous (name = "Mascul Inflacarat")
 public class FarAuton extends LinearOpMode {
     private Follower follower;
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Vision vision;
