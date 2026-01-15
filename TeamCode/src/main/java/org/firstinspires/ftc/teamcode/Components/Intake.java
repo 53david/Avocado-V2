@@ -19,9 +19,6 @@ public class Intake {
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
-    public void init(HardwareMap hwMap){
-        intakeMotor = hwMap.get(DcMotorEx.class,"intake");
-    }
 
     public void update() {
         if (gm1.right_bumper==prevgm1.right_bumper && gm1.right_bumper)

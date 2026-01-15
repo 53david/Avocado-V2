@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Components;
 
+import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
+
 import android.util.Size;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -29,8 +31,8 @@ public class Turret {
         this.webcam=webcam;
         rotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        
+        rotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawTagOutline(true)
@@ -49,9 +51,8 @@ public class Turret {
                 .enableLiveView(true)
                 .build();
     }
-    public void init(HardwareMap hwMap){
-        webcam = hwMap.get(WebcamName.class,"webcam1");
-        rotate = hwMap.get(DcMotorEx.class,"rotate");
+    public void Rotate (){
+        rotate.setPower(gm1.right_stick_x*0.4);
     }
     public void update() {
         double n = 10.0 / 3.0;
@@ -68,7 +69,7 @@ public class Turret {
                     telemetry.addLine("Esti prost");
                     telemetry.addData("Angle",a);
                     telemetry.addData("Target",target);
-            }
+                }
             }
         }
     }
