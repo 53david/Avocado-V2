@@ -135,45 +135,13 @@ public class FarAutonBlue extends LinearOpMode {
                 break;
         }
     }
-    public void robotUpdate(){
 
-        shoot1.setVelocity(velocity);
-        shoot2.setVelocity(velocity);
-        intakeMotor.setPower(power);
-
-        switch (robotState){
-            case IDLE:
-                velocity = 200;
-                power = 0.5;
-                robotTimer.reset();
-                xball = 0;
-                break;
-            case SHOOT:
-                velocity = 1600;
-                power = 0.5;
-                if (robotTimer.milliseconds()>1000 && xball<3) {
-                    xball++;
-                    robotTimer.reset();
-                }
-                else if (xball == 3){
-                    robotState = RobotState.IDLE;
-                }
-                break;
-            case INTAKE:
-                velocity = 200;
-                power = 1;
-                robotTimer.reset();
-                xball = 0;
-                break;
-        }
-    }
     @Override
     public void runOpMode(){
         waitForStart();
         hardwinit();
         while (opModeIsActive()){
             pathUpdate();
-            robotUpdate();
             follower.update();
         }
     }

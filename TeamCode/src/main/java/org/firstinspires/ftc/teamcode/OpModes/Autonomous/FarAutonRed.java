@@ -48,12 +48,6 @@ public class FarAutonRed extends LinearOpMode {
         Shoot_Player,
         Player_Shoot,
     }
-    public enum RobotState{
-        INTAKE,
-        SHOOT,
-        IDLE,
-    }
-    private RobotState robotState;
     private PathState pathState;
     public void buildPaths(){
         StartShootPos = follower.pathBuilder()
@@ -82,92 +76,35 @@ public class FarAutonRed extends LinearOpMode {
             case Start_Shoot:
                 follower.followPath(StartShootPos,1,true);
                 if (!follower.isBusy()){
-                    robotState = RobotState.SHOOT;
-                    if (pathTimer.milliseconds()>5000){
                         pathState = PathState.Shoot_Ball;
-                    }
-                }
-                else {
-                    robotState = RobotState.IDLE;
-                    pathTimer.reset();
                 }
                 break;
             case Shoot_Ball:
                 follower.followPath(ShootBallPos,1,true);
-                robotState = RobotState.INTAKE;
-                if (!follower.isBusy()){
                     pathState = PathState.Ball_Shoot;
-                    pathTimer.reset();
-                }
                 break;
             case Ball_Shoot:
                 follower.followPath(BallShootPos,1,true);
                 if (!follower.isBusy()){
-                    robotState = RobotState.SHOOT;
-                    if (pathTimer.milliseconds()>5000) {
                         pathState = PathState.Shoot_Player;
-                    }
-                }
-                else {
-                    pathTimer.reset();
-                    robotState = RobotState.IDLE;
                 }
                 break;
             case Shoot_Player:
                 follower.followPath(ShootPlayerPos,1,true);
-                robotState = RobotState.INTAKE;
                 if (!follower.isBusy()){
                     pathState = PathState.Player_Shoot;
-                    pathTimer.reset();
                 }
                 break;
             case Player_Shoot:
                 follower.followPath(PlayerShootPos,1,true);
                 if (!follower.isBusy()){
-                    robotState = RobotState.SHOOT;
-                    if (pathTimer.milliseconds()>5000 ) {
                         pathState = PathState.Shoot_Player;
                     }
-                }
-                else {
-                    pathTimer.reset();
-                    robotState = RobotState.IDLE;
-                }
+
                 break;
         }
     }
-    public void robotUpdate(){
 
-        shoot1.setVelocity(velocity);
-        shoot2.setVelocity(velocity);
-        intakeMotor.setPower(power);
-
-        switch (robotState){
-            case IDLE:
-                velocity = 200;
-                power = 0.5;
-                robotTimer.reset();
-                xball = 0;
-                break;
-            case SHOOT:
-                velocity = 1600;
-                power = 0.5;
-                if (robotTimer.milliseconds()>1000 && xball<3) {
-                    xball++;
-                    robotTimer.reset();
-                }
-                else if (xball == 3){
-                    robotState = RobotState.IDLE;
-                }
-                break;
-            case INTAKE:
-                velocity = 200;
-                power = 1;
-                robotTimer.reset();
-                xball = 0;
-                break;
-        }
-    }
     @Override
     public void runOpMode(){
         waitForStart();
@@ -175,14 +112,12 @@ public class FarAutonRed extends LinearOpMode {
         while (opModeIsActive()){
             follower.update();
             pathUpdate();
-            robotUpdate();
         }
     }
     public void hardwinit(){
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         pathState = PathState.Start_Shoot;
-        robotState = RobotState.IDLE;
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
         rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
         leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
