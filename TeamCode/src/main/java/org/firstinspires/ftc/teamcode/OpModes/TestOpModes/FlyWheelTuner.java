@@ -34,23 +34,21 @@ public class FlyWheelTuner extends LinearOpMode {
             telemetryM.addData("F",F);
             telemetryM.addData("Error 1",shoot2.getVelocity());
             telemetryM.update();
-            PIDFCoefficients pidfcoef1 = new PIDFCoefficients(P,I,D,F);
-            PIDFCoefficients pidfcoef2 = new PIDFCoefficients(P,I,D,F);
-            shoot1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef1);
-            shoot2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef2);
+            PIDFCoefficients pidfcoef = new PIDFCoefficients(P,I,D,F);
+            shoot1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
+            shoot2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
 
         }
 
     }
     public void hardwinit(){
-        PIDFCoefficients pidfcoef1 = new PIDFCoefficients(P,I,D,F);
-        PIDFCoefficients pidfcoef2 = new PIDFCoefficients(P,I,D,F);
         shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
         shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
+        PIDFCoefficients pidfcoef = new PIDFCoefficients(P,I,D,F);
         shoot1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shoot2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shoot1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef1);
-        shoot2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef2);
+        shoot1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
+        shoot2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
         shoot1.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }

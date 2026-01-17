@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode.Components;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm2;
+import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.D;
+import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.F;
+import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.I;
+import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.P;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,80 +27,39 @@ public class Outake {
     double velocity;
     boolean ok = true; int nr = 0;
     private DcMotorEx shoot1, shoot2, rotate; CRServo p;
-    private final static double P = 0 ,F = 0, I=0;
-    private PIDFCoefficients coef1 = new PIDFCoefficients(P,I,0,F);
+    PIDFCoefficients pidfcoef = new PIDFCoefficients(P,I,D,F);
     private Servo servo;
 
     enum State {
-        POW0,
-        POW1,
-        POW2,
-        POW3,
-        POW4,
-    };
-    enum ShootState{
         IDLE,
-        SHOOT,
-    }
-    State state = State.POW2;
-    ShootState shootState = ShootState.IDLE;
+        CLOSE,
+        FAR,
+    };
+
+    State state;
     public Outake(DcMotorEx shoot1, DcMotorEx shoot2, DcMotorEx rotate,Telemetry telemetry) {
         this.shoot1 = shoot1;
         this.shoot2 = shoot2;
         this.rotate = rotate;
 
         this.telemetry = telemetry;
-        shoot1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shoot2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shoot1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shoot2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shoot1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
+        shoot2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
         shoot1.setDirection(DcMotorSimple.Direction.REVERSE);
-        shoot1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        shoot2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
 
     public void shooter() {
         telemetry.update();
         switch (state){
-            case POW0:
-                telemetry.addLine("POW0");
-                shoot1.setPower(0);
-                shoot2.setPower(0);
-                if (gm1.cross){
-                    state = State.POW1;
-                }
-                break;
-            case POW1:
-                telemetry.addLine("POW1");
-                shoot1.setPower(0.45);
-                shoot2.setPower(0.45);
-                if (gm1.cross){
-                    state = State.POW2;
-                }
-                break;
-            case POW2:
-                telemetry.addLine("POW2");
-                shoot1.setPower(0.65);
-                shoot2.setPower(0.65);
-                if (gm1.cross){
-                    state =State.POW3;
-                }
-                break;
-            case POW3:
-                telemetry.addLine("POW3");
-                shoot1.setPower(0.75);
-                shoot2.setPower(0.75);
-                if (gm1.cross){
-                    state =State.POW4;
-                }
-                break;
-            case POW4:
-                telemetry.addLine("POW4");
-                shoot1.setPower(1);
-                shoot2.setPower(1);
-                if (gm1.cross){
-                    state =State.POW0;
-                }
-                break;
-
+            case CLOSE:
+                shoot1.setVelocity(900);
+                shoot2.setVelocity(900);
+            case FAR:
+                shoot1.setVelocity(1500);
+                shoot2.setVelocity(1500);
         }
 
     }
