@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
 import android.graphics.Color;
 
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -29,6 +31,7 @@ import org.firstinspires.ftc.vision.opencv.ColorRange;
 @Autonomous (name = "Mascul Inflacarat RED")
 public class FarAutonRed extends LinearOpMode {
     private Follower follower; private WebcamName webcam1;
+    TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Turret turret;
     private Outake outake; Servo transfer; private Storage storage;
     ElapsedTime pathTimer,robotTimer;
@@ -139,9 +142,9 @@ public class FarAutonRed extends LinearOpMode {
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor);
-        outake = new Outake(shoot1,shoot2,rotate,telemetry);
+        outake = new Outake(shoot1,shoot2);
         storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
-        turret = new Turret(rotate,webcam1,telemetry);
+        turret = new Turret(rotate,webcam1,telemetryM);
         storage.turner.setPidCoefficients(coefs);
         storage.turner.setPidCoefficients(coefs);
     }

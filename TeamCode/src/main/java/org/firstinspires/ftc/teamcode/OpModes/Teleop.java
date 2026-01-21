@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -33,6 +35,7 @@ public class Teleop extends LinearOpMode {
     private ColorRangeSensor colorSensor;
     public static PIDCoefficients coefs = new PIDCoefficients(0.38247891 ,0, 0.03728480);
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
+    TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
     WebcamName webcam1;
     public static Gamepad prevgm1,prevgm2; int nr = 0;
@@ -67,7 +70,12 @@ public class Teleop extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
         leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
         rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
-        intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
+        MotorConfigurationType m= leftFront.getMotorType();
+        m.setAchieveableMaxRPMFraction(1);
+        leftFront.setMotorType(m);
+        rightFront.setMotorType(m);
+        leftBack.setMotorType(m);
+        rightBack.setMotorType(m);
         shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
         shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
@@ -75,17 +83,11 @@ public class Teleop extends LinearOpMode {
         webcam1 = hardwareMap.get(WebcamName.class,"webcam1");
         servo = hardwareMap.get(CRServo.class,"servo");
         colorSensor = hardwareMap.get(ColorRangeSensor.class,"colorSensor");
-        MotorConfigurationType m= leftFront.getMotorType();
-        m.setAchieveableMaxRPMFraction(1);
-        leftFront.setMotorType(m);
-        rightFront.setMotorType(m);
-        leftBack.setMotorType(m);
-        rightBack.setMotorType(m);
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor);
-        outake = new Outake(shoot1,shoot2,rotate,telemetry);
+        outake = new Outake(shoot1,shoot2);
         storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
-        turret = new Turret(rotate,webcam1,telemetry);
+        turret = new Turret(rotate,webcam1,telemetryM);
         storage.turner.setPidCoefficients(coefs);
 
     }

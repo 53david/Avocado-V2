@@ -10,11 +10,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Stuff.PIDController;
+
 
 public class DriveTrain {
     private DcMotorEx leftFront, rightFront, leftBack, rightBack;
     boolean ok;
-
+    private PIDController tuner = new PIDController(0,0,0);
     public DriveTrain(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack) {
 
         this.leftFront = leftFront;
@@ -28,24 +30,6 @@ public class DriveTrain {
         leftBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-    }
-
-    public void test() {
-        if (gm1.square) {
-            leftFront.setPower(1);
-        } else leftFront.setPower(0);
-        if (gm1.triangle) {
-            rightFront.setPower(1);
-            //left back
-        } else rightFront.setPower(0);
-        if (gm1.circle) {
-            leftBack.setPower(1);
-            //right back
-        } else leftBack.setPower(0);
-        if (gm1.cross) {
-            rightBack.setPower(1);
-            //right front
-        } else rightBack.setPower(0);
     }
 
     public void update() {
@@ -64,24 +48,5 @@ public class DriveTrain {
         rightBack.setPower(backRightPower);
     }
 
-    public void StrafeRight() {
-        leftFront.setPower(-1);
-        leftBack.setPower(1);
-        rightFront.setPower(1);
-        rightBack.setPower(-1);
-    }
 
-    public void StrafeLeft() {
-        leftFront.setPower(1);
-        leftBack.setPower(-1);
-        rightFront.setPower(-1);
-        rightBack.setPower(1);
-    }
-
-    public void BackWards() {
-        leftFront.setPower(-1);
-        leftBack.setPower(-1);
-        rightFront.setPower(-1);
-        rightBack.setPower(-1);
-    }
 }

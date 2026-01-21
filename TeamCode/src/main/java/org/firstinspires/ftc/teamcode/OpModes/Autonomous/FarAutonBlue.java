@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -32,6 +34,8 @@ public class FarAutonBlue extends LinearOpMode {
     ElapsedTime pathTimer,robotTimer;
     private WebcamName webcam1;
     private ColorRangeSensor colorSensor;
+    TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+
     double velocity = 200,power = 0.5; int xball = 0;
     public static PIDCoefficients coefs = new PIDCoefficients(0.4 ,0, 0.002);
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
@@ -171,9 +175,9 @@ public class FarAutonBlue extends LinearOpMode {
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor);
-        outake = new Outake(shoot1,shoot2,rotate,telemetry);
+        outake = new Outake(shoot1,shoot2);
         storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
-        turret = new Turret(rotate,webcam1,telemetry);
+        turret = new Turret(rotate,webcam1,telemetryM);
 
         storage.turner.setPidCoefficients(coefs);
     }

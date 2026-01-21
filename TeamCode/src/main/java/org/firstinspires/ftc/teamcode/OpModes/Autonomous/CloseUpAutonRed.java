@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -27,6 +29,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 @Autonomous(name = "Mascul Fioros RED")
 public class CloseUpAutonRed extends LinearOpMode {
     private Follower follower;
+    TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Turret turret;
     private Outake outake; Servo transfer; private Storage storage; ElapsedTime robotTimer,pathTimer; private ColorRangeSensor colorSensor;
     Timer timer2;
@@ -148,9 +152,9 @@ public class CloseUpAutonRed extends LinearOpMode {
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor);
-        outake = new Outake(shoot1,shoot2,rotate,telemetry);
+        outake = new Outake(shoot1,shoot2);
         storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
-        turret = new Turret(rotate,webcam1,telemetry);
+        turret = new Turret(rotate,webcam1,telemetryM);
         storage.turner.setPidCoefficients(coefs);
     }
 }

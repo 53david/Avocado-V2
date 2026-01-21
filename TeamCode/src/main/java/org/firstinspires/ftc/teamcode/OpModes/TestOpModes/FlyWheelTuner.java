@@ -17,7 +17,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
-@TeleOp(name = "Iustinel")
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+@TeleOp(name = "FlyWheel Tuner")
 @Configurable
 public class FlyWheelTuner extends LinearOpMode {
     TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
@@ -28,8 +30,8 @@ public class FlyWheelTuner extends LinearOpMode {
         hardwinit();
         waitForStart();
         while (opModeIsActive()){
-            shoot1.setVelocity(vel1);
-            shoot2.setVelocity(vel2);
+            shoot1.setVelocity(vel1, AngleUnit.DEGREES);
+            shoot2.setVelocity(vel2, AngleUnit.DEGREES);
             telemetryM.addData("P",P);
             telemetryM.addData("F",F);
             telemetryM.addData("Error 1",shoot2.getVelocity());

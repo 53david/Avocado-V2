@@ -29,20 +29,16 @@ public class Outake {
     private DcMotorEx shoot1, shoot2, rotate; CRServo p;
     PIDFCoefficients pidfcoef = new PIDFCoefficients(P,I,D,F);
     private Servo servo;
-
     enum State {
         IDLE,
         CLOSE,
         FAR,
     };
-
     State state;
-    public Outake(DcMotorEx shoot1, DcMotorEx shoot2, DcMotorEx rotate,Telemetry telemetry) {
+    public Outake(DcMotorEx shoot1, DcMotorEx shoot2) {
         this.shoot1 = shoot1;
         this.shoot2 = shoot2;
-        this.rotate = rotate;
 
-        this.telemetry = telemetry;
         shoot1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shoot2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shoot1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
@@ -50,7 +46,6 @@ public class Outake {
         shoot1.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
-
     public void shooter() {
         telemetry.update();
         switch (state){
@@ -63,8 +58,6 @@ public class Outake {
         }
 
     }
-
-
 
 }
 

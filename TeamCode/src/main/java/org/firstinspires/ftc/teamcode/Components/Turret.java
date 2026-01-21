@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 
 import android.util.Size;
 
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -21,11 +22,10 @@ public class Turret {
     public DcMotorEx rotate;
     public AprilTagProcessor tagProcessor;
     public VisionPortal visionPortal;
-    Telemetry telemetry;
+    TelemetryManager telemetry;
     double fx=752.848, fy=752.848, cx=314.441, cy=219.647;
-    private WebcamName webcam;
-
-    public Turret(DcMotorEx rotate, WebcamName webcam, Telemetry telemetry){
+    WebcamName webcam;
+    public Turret(DcMotorEx rotate, WebcamName webcam, TelemetryManager telemetry){
         this.rotate=rotate;
         this.telemetry=telemetry;
         this.webcam=webcam;
@@ -69,6 +69,7 @@ public class Turret {
                     telemetry.addLine("Esti prost");
                     telemetry.addData("Angle",a);
                     telemetry.addData("Target",target);
+
                 }
             }
         }
