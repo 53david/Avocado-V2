@@ -15,6 +15,8 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 @Configurable
 @TeleOp(name = "Mecanum Tuner")
 public class MecanumTuner extends LinearOpMode {
@@ -27,6 +29,12 @@ public class MecanumTuner extends LinearOpMode {
         hardwinit();
         waitForStart();
         while (opModeIsActive()){
+            coef = new PIDFCoefficients(P,I,D,F);
+            leftFront.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,coef);
+            rightFront.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,coef);
+            leftBack.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,coef);
+            rightBack.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,coef);
+
             double y = gm1.left_stick_y;
             double x = -gm1.left_stick_x * 1.1;
             double rx = gm1.left_trigger - gm1.right_trigger;
@@ -35,10 +43,10 @@ public class MecanumTuner extends LinearOpMode {
             double backLeftPower = (y - x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
-            leftFront.setVelocity(frontLeftPower*1500);
-            leftBack.setVelocity(backLeftPower*1500);
-            rightFront.setVelocity(frontRightPower*1500);
-            rightBack.setVelocity(backRightPower*1500);
+            leftFront.setVelocity(frontLeftPower*1500, AngleUnit.DEGREES);
+            leftBack.setVelocity(backLeftPower*1500,AngleUnit.DEGREES);
+            rightFront.setVelocity(frontRightPower*1500,AngleUnit.DEGREES);
+            rightBack.setVelocity(backRightPower*1500,AngleUnit.DEGREES);
             telemetryM.addData("error",leftFront.getVelocity());
         }
     }

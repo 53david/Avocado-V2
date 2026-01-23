@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class Outake {
     private Telemetry telemetry;
@@ -46,15 +47,14 @@ public class Outake {
         shoot1.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
-    public void shooter() {
-        telemetry.update();
+    public void update() {
         switch (state){
             case CLOSE:
-                shoot1.setVelocity(900);
-                shoot2.setVelocity(900);
+                shoot1.setVelocity(900, AngleUnit.DEGREES);
+                shoot2.setVelocity(900,AngleUnit.DEGREES);
             case FAR:
-                shoot1.setVelocity(1500);
-                shoot2.setVelocity(1500);
+                shoot1.setVelocity(1500,AngleUnit.DEGREES);
+                shoot2.setVelocity(1500,AngleUnit.DEGREES);
         }
 
     }
