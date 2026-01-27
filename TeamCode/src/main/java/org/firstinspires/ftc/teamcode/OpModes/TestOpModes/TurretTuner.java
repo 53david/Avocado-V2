@@ -59,6 +59,10 @@ public class TurretTuner extends LinearOpMode {
     }
     public void hardwinit(){
 
+
+        webcam = hardwareMap.get(WebcamName.class,"webcam1");
+        rotate = hardwareMap.get(DcMotorEx.class,"rotate");
+
         tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawTagOutline(true)
@@ -76,9 +80,6 @@ public class TurretTuner extends LinearOpMode {
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .enableLiveView(true)
                 .build();
-
-        webcam = hardwareMap.get(WebcamName.class,"webcam1");
-        rotate = hardwareMap.get(DcMotorEx.class,"rotate");
 
     }
     public void tUpdate(){

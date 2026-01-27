@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 public class Turret {
     public DcMotorEx rotate;
+    Outake outake;
     public AprilTagProcessor tagProcessor;
     public VisionPortal visionPortal;
     TelemetryManager telemetry;
@@ -71,6 +72,7 @@ public class Turret {
                     telemetry.addData("Target",target);
 
                 }
+
             }
         }
     }

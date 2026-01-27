@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Stuff.ShooterConstants;
 
 public class Outake {
     private Telemetry telemetry;
@@ -27,14 +28,17 @@ public class Outake {
     double power;
     double velocity;
     boolean ok = true; int nr = 0;
-    private DcMotorEx shoot1, shoot2, rotate; CRServo p;
+    private final DcMotorEx shoot1;
+    private final DcMotorEx shoot2;
+    private DcMotorEx rotate; CRServo p;
     PIDFCoefficients pidfcoef = new PIDFCoefficients(P,I,D,F);
     private Servo servo;
     enum State {
         IDLE,
         CLOSE,
         FAR,
-    };
+    }
+
     State state;
     public Outake(DcMotorEx shoot1, DcMotorEx shoot2) {
         this.shoot1 = shoot1;
@@ -52,9 +56,12 @@ public class Outake {
             case CLOSE:
                 shoot1.setVelocity(900, AngleUnit.DEGREES);
                 shoot2.setVelocity(900,AngleUnit.DEGREES);
+                shoot1.setVelocity(ShooterConstants.fwVel(12));
+                break;
             case FAR:
                 shoot1.setVelocity(1500,AngleUnit.DEGREES);
                 shoot2.setVelocity(1500,AngleUnit.DEGREES);
+                break;
         }
 
     }

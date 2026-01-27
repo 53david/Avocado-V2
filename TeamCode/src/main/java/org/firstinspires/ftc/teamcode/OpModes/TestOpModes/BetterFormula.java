@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes.TestOpModes;
-
-import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.F;
-import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.I;
-import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.P;
-import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.D;
-
-
-import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.pos;
-import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.vel1;
-import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.vel2;
+import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kd;
+import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Ki;
+import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kp;
+import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Ks;
+import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kv;
 
 import android.util.Size;
 
@@ -18,14 +13,11 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Stuff.PIDController;
 import org.firstinspires.ftc.teamcode.Stuff.ShooterConstants;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -35,28 +27,36 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 
-@TeleOp(name = "FlyWheel Tuner")
 @Configurable
-public class FlyWheelTuner extends LinearOpMode {
+@TeleOp (name="Formula")
+public class BetterFormula extends LinearOpMode {
+    DcMotorEx shoot1,shoot2;
+    double delta = 0;
+    double vel1 = 0;
     TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
     TelemetryManager telemetryC = PanelsTelemetry.INSTANCE.getTelemetry();
     double fx=752.848, fy=752.848, cx=314.441, cy=219.647;
-    double delta  = 0.0;
-    public static double multiplier = 1;
-    private DcMotorEx shoot1,shoot2; private WebcamName webcam;
+    WebcamName webcam;
     public AprilTagProcessor tagProcessor;
     public VisionPortal visionPortal;
-    private Servo transfer;
+
+    PIDController controller = new PIDController(Kp,Ki,Kd);
+    PIDCoefficients coef = new PIDCoefficients(Kp,Ki,Kd);
     @Override
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode()throws InterruptedException{
         hardwinit();
         waitForStart();
         while (opModeIsActive()){
-            transfer.setPosition(pos);
-            PIDFCoefficients pidfcoef = new PIDFCoefficients(P,I,D,F);
-            telemetryM.addData("Error",shoot1.getVelocity());
-            shoot1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
-            shoot2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
+
+            controller.setPidCoefficients(coef);
+            vel1 = controller.calculatePower(shoot1.getVelocity());
+            vel1+= Kv * ShooterConstants.fwVel(delta) + Ks;
+            shoot1.setPower(vel1);
+            shoot2.setPower(vel1);
+
+            telemetryM.addData("Error",vel1-shoot1.getVelocity());
+            telemetryM.update();
+
             ArrayList<AprilTagDetection> detections = tagProcessor.getDetections();
             if (!detections.isEmpty()) {
                 AprilTagDetection tag = detections.get(0);
@@ -69,21 +69,11 @@ public class FlyWheelTuner extends LinearOpMode {
                 telemetryC.update();
 
             }
-
-            telemetryM.update();
         }
-
     }
     public void hardwinit(){
-        webcam = hardwareMap.get(WebcamName.class,"webcam1");
-        shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
-        transfer = hardwareMap.get(Servo.class,"transfer");
         shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
-        PIDFCoefficients pidfcoef = new PIDFCoefficients(P,I,D,F);
-        shoot1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shoot2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shoot1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
-        shoot2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
+        shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
         shoot1.setDirection(DcMotorSimple.Direction.REVERSE);
 
         tagProcessor = new AprilTagProcessor.Builder()
@@ -103,7 +93,7 @@ public class FlyWheelTuner extends LinearOpMode {
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .enableLiveView(true)
                 .build();
-        PanelsCameraStream.INSTANCE.startStream(visionPortal,10);
 
+        PanelsCameraStream.INSTANCE.startStream(visionPortal,10);
     }
 }
