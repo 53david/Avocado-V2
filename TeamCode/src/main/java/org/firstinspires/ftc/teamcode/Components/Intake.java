@@ -21,8 +21,11 @@ public class Intake {
         else if (gm1.left_bumper==prevgm1.left_bumper && gm1.left_bumper) {
             intakeMotor.setPower(-1);
         }
+        else if (gm1.cross){
+           intakeMotor.setPower(1);
+        }
         else {
-            intakeMotor.setPower(0.4);
+            intakeMotor.setPower(0);
         }
 
     }

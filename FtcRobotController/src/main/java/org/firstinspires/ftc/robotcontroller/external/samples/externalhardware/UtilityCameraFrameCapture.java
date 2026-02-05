@@ -31,10 +31,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.robotcontroller.external.samples.externalhardware;
 
 import android.util.Size;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+import com.bylazar.camerastream.PanelsCameraStream;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -58,7 +61,6 @@ import java.util.Locale;
  */
 
 @TeleOp(name = "Utility: Camera Frame Capture", group = "Utility")
-@Disabled
 public class UtilityCameraFrameCapture extends LinearOpMode
 {
     /*
@@ -68,23 +70,31 @@ public class UtilityCameraFrameCapture extends LinearOpMode
     final BuiltinCameraDirection INTERNAL_CAM_DIR = BuiltinCameraDirection.BACK;
     final int RESOLUTION_WIDTH = 640;
     final int RESOLUTION_HEIGHT = 480;
+    TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
     // Internal state
     boolean lastX;
     int frameCount;
     long capReqTime;
+    WebcamName webcam;
 
     @Override
     public void runOpMode()
     {
+
+        webcam = hardwareMap.get(WebcamName.class,"Webcam 1");
         VisionPortal portal;
 
         if (USING_WEBCAM)
         {
+
             portal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                    .setCamera(webcam)
                     .setCameraResolution(new Size(RESOLUTION_WIDTH, RESOLUTION_HEIGHT))
+                    .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                    .enableLiveView(true)
                     .build();
+            PanelsCameraStream.INSTANCE.startStream(portal,10);
         }
         else
         {

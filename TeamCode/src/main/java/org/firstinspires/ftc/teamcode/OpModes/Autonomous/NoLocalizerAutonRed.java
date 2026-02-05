@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
@@ -68,7 +67,7 @@ public class NoLocalizerAutonRed extends LinearOpMode {
         intake = new Intake(intakeMotor);
         outake = new Outake(shoot1,shoot2);
         storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
-        turret = new Turret(rotate,webcam1,telemetryM);
+        turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM);
         storage.turner.setPidCoefficients(coefs);
     }
 }

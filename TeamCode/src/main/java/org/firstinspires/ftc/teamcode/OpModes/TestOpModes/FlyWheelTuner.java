@@ -16,6 +16,7 @@ import com.bylazar.camerastream.PanelsCameraStream;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 
 @TeleOp(name = "FlyWheel Tuner")
 @Configurable
+@Disabled
 public class FlyWheelTuner extends LinearOpMode {
     TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
     TelemetryManager telemetryC = PanelsTelemetry.INSTANCE.getTelemetry();

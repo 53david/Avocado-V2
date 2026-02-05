@@ -11,6 +11,7 @@ import com.bylazar.camerastream.PanelsCameraStream;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 
 @Configurable
 @TeleOp (name="Formula")
+@Disabled
 public class BetterFormula extends LinearOpMode {
     DcMotorEx shoot1,shoot2;
     double delta = 0;

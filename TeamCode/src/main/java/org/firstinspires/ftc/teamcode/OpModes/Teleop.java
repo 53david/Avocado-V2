@@ -11,33 +11,25 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Components.DriveTrain;
 import org.firstinspires.ftc.teamcode.Components.Intake;
 import org.firstinspires.ftc.teamcode.Components.Outake;
+import org.firstinspires.ftc.teamcode.Components.Pivot;
 import org.firstinspires.ftc.teamcode.Components.Storage;
-import org.firstinspires.ftc.teamcode.Components.Turret;
-import org.firstinspires.ftc.teamcode.Stuff.PIDController;
 
 @TeleOp(name = "Vlad e the goat")
 public class Teleop extends LinearOpMode {
-    private DriveTrain chassis; private Intake intake; private CRServo servo; public static Turret turret;
-    private Outake outake; Servo transfer; private Storage storage;
-    private ColorRangeSensor colorSensor;
-    public static PIDCoefficients coefs = new PIDCoefficients(0.38247891 ,0, 0.03728480);
+    private DriveTrain chassis; private Intake intake;
+    private Outake outake; Servo transfer;
+    private Pivot pivot;
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
     TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-
-    WebcamName webcam1;
     public static Gamepad prevgm1,prevgm2; int nr = 0;
     public static Gamepad gm1,gm2;
     @Override
@@ -51,10 +43,10 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
             gm1.copy(gamepad1);
             gm2.copy(gamepad2);
+            pivot.update();
             intake.update();
             chassis.update();
             outake.update();
-            telemetry.update();
             prevgm1.copy(gm1);
             prevgm2.copy(gm2);
 
@@ -76,15 +68,11 @@ public class Teleop extends LinearOpMode {
         shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
         transfer = hardwareMap.get(Servo.class,"transfer");
-        webcam1 = hardwareMap.get(WebcamName.class,"webcam1");
-        servo = hardwareMap.get(CRServo.class,"servo");
-        colorSensor = hardwareMap.get(ColorRangeSensor.class,"colorSensor");
+        intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor);
         outake = new Outake(shoot1,shoot2);
-        storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
-        turret = new Turret(rotate,webcam1,telemetryM);
-        storage.turner.setPidCoefficients(coefs);
+        pivot = new Pivot(rotate,transfer);
 
     }
 }

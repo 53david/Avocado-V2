@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -63,6 +64,7 @@ public class FarAutonBlue extends LinearOpMode {
                 .build();
         ShootBallPos = follower.pathBuilder()
                 .addPath(new BezierLine(shootPose,ballPose))
+                .addPath(new BezierCurve())
                 .setLinearHeadingInterpolation(shootPose.getHeading(),ballPose.getHeading())
                 .build();
         BallShootPos = follower.pathBuilder()
@@ -95,7 +97,6 @@ public class FarAutonBlue extends LinearOpMode {
                 break;
             case Shoot_Ball:
                 follower.followPath(ShootBallPos,1,true);
-                robotState = RobotState.INTAKE;
                 if (!follower.isBusy()){
                     pathState = PathState.Ball_Shoot;
                     pathTimer.reset();
@@ -175,7 +176,7 @@ public class FarAutonBlue extends LinearOpMode {
         intake = new Intake(intakeMotor);
         outake = new Outake(shoot1,shoot2);
         storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
-        turret = new Turret(rotate,webcam1,telemetryM);
+        turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM);
 
         storage.turner.setPidCoefficients(coefs);
     }

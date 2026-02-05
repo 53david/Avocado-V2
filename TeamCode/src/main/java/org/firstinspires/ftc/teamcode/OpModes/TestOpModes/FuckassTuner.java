@@ -6,6 +6,8 @@ import static org.firstinspires.ftc.teamcode.Stuff.FuckassPID.D;
 import static org.firstinspires.ftc.teamcode.Stuff.FuckassPID.vel;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -22,6 +24,7 @@ import org.firstinspires.ftc.teamcode.Stuff.ShooterConstants;
 public class FuckassTuner extends LinearOpMode {
     double power = 0;
     DcMotorEx shoot1,shoot2;
+    TelemetryManager telemetrym = PanelsTelemetry.INSTANCE.getTelemetry();
     PIDController cont = new PIDController(P,I,D);
     PIDCoefficients coef = new PIDCoefficients(P,I,D);
     @Override
@@ -30,11 +33,14 @@ public class FuckassTuner extends LinearOpMode {
                 waitForStart();
                 while (opModeIsActive()){
                     cont.setPidCoefficients(coef);
-                    power+=cont.calculatePower(shoot1.getVelocity(),vel);
-                    power = Math.max(1,power);
+                    power+=cont.calculatePower(shoot2.getVelocity(),vel);
+                    power = Math.min(1,power);
                     power = Math.max(-1,power);
                     shoot1.setPower(power);
                     shoot2.setPower(power);
+                    telemetrym.addData("Error",shoot1.getVelocity());
+                    telemetrym.addData("Error",shoot2.getVelocity());
+                    telemetrym.update();
                 }
         }
         public void hardwinit(){

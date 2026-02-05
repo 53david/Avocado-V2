@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.P;
 import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.I;
 import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.D;
 
+import com.bylazar.camerastream.PanelsCameraStream;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
@@ -15,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Stuff.PIDController;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -31,38 +33,48 @@ public class TurretTuner extends LinearOpMode {
     public AprilTagProcessor tagProcessor;
     public VisionPortal visionPortal;
     WebcamName webcam;
-    public PIDController tuner = new PIDController(P,I,D);
-    private static final double n = 300.0/48.0;
+
+    private static final double n = 540/90.0;
+    private static double x= 0;
     double a = 0,target = 0;
     TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-    double fx=752.848, fy=752.848, cx=314.441, cy=219.647;
+
+    double fx=807.567, fy=807.567, cx=345.549 , cy=267.084;
+    public PIDController pid = new PIDController(P,I,D);
     public PIDCoefficients coef = new PIDCoefficients(P,I,D);
     @Override
     public void runOpMode()throws InterruptedException{
         hardwinit();
         waitForStart();
+
         while (opModeIsActive()){
             ArrayList<AprilTagDetection> detections = tagProcessor.getDetections();
-            if (!detections.isEmpty()) {
-                AprilTagDetection tag = detections.get(0);
-                telemetryM.addData("ID",tag.id);
-                telemetryM.addData("Pitch",tag.ftcPose.pitch);
-                telemetryM.addData("Yaw",tag.ftcPose.yaw);
-                telemetryM.addData("Bearing",tag.ftcPose.bearing);
-                a = tag.ftcPose.bearing;
+            boolean IsTagSeen = false;
+            for(AprilTagDetection tag:tagProcessor.getDetections()){
+                if (tag.id == 20) {
+                    telemetryM.addData("ID", tag.id);
+                    telemetryM.addData("Pitch", tag.ftcPose.pitch);
+                    telemetryM.addData("Yaw", tag.ftcPose.yaw);
+                    telemetryM.addData("Bearing", tag.ftcPose.bearing);
+                    rotate.setPower(pid.calculatePower(tag.ftcPose.bearing));
+                    coef = new PIDCoefficients(P, I, D);
+                    pid.setPidCoefficients(coef);
+                    IsTagSeen = true;
+                }
             }
-            tuner.setPidCoefficients(coef);
-            turretTrack();
-            tUpdate();
+            if(!IsTagSeen){
+                rotate.setPower(0);
+            }
+
             telemetryM.update();
         }
     }
     public void hardwinit(){
+        pid.setTargetPosition(0);
 
-
-        webcam = hardwareMap.get(WebcamName.class,"webcam1");
+        webcam = hardwareMap.get(WebcamName.class,"Webcam 1");
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
-
+        rotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawTagOutline(true)
@@ -80,17 +92,7 @@ public class TurretTuner extends LinearOpMode {
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .enableLiveView(true)
                 .build();
+        PanelsCameraStream.INSTANCE.startStream(visionPortal,30);
+    }
 
-    }
-    public void tUpdate(){
-            rotate.setPower(tuner.calculatePower(FromTicksToDegrees()));
-
-    }
-    public void turretTrack(){
-        target += a;
-        tuner.setTargetPosition(target);
-    }
-    public double FromTicksToDegrees(){
-        return rotate.getCurrentPosition() /384.5 * Math.PI * 2.0;
-    }
 }

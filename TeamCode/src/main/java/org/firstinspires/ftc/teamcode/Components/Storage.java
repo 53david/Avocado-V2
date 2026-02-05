@@ -39,7 +39,7 @@ public class Storage {
 
     ColorState state;
 
-    private DcMotorEx motor;ShootState shootState;
+    private DcMotorEx motor; ShootState shootState;
 
     public Storage (Servo servo,CRServo revolver, DcMotorEx encoder, ColorRangeSensor colorSensor, Telemetry telemetry){
         this.servo = servo;
