@@ -45,11 +45,9 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
             gm1.copy(gamepad1);
             gm2.copy(gamepad2);
-            pivot.update();
             intake.update();
             turret.update();
             chassis.update();
-            outake.update();
             prevgm1.copy(gm1);
             prevgm2.copy(gm2);
 

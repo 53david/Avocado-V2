@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.Components;
 import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.D;
 import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.I;
 import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.P;
-
+import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm2;
 import android.util.Size;
 
 import com.bylazar.configurables.annotations.Configurable;
@@ -36,6 +36,16 @@ public class Turret{
     public PIDController pidFw = new PIDController(Kp,Ki,Kd);
     public PIDCoefficients coef = new PIDCoefficients(P,I,D);
     WebcamName webcam;
+    public enum StateFw{
+        AUTO,
+        MANUAL,
+    }
+    public enum StateT{
+        AUTO,
+        MANUAL,
+    };
+    StateFw stateFw = StateFw.AUTO;
+    StateT stateT = StateT.AUTO;
     public Turret(DcMotorEx rotate, DcMotorEx shoot1, DcMotorEx shoot2, WebcamName webcam, TelemetryManager telemetryM){
         this.rotate=rotate;
         this.telemetryM=telemetryM;
@@ -67,21 +77,61 @@ public class Turret{
     }
 
     public void update(){
-            turretTrack();
-            flyWh();
+        tUpdate();
+        fwUpdate();
     }
-    public void flyWh(){
+    public void tUpdate(){
+        switch (stateT){
+            case AUTO:
+                turretTrack();
+                break;
+            case MANUAL:
+                rotate.setTargetPosition((int)gm2.right_stick_x * 50);
+                rotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rotate.setPower(1);
+                break;
+        }
+        if (gm2.optionsWasPressed()){
+            if (stateT == StateT.AUTO){
+                stateT = StateT.MANUAL;
+            }
+            else {
+                stateT = StateT.AUTO;
+            }
+        }
+
+    }
+    public void fwUpdate(){
+        switch (stateFw){
+            case AUTO:
+                FlyWh();
+                break;
+            case MANUAL:
+                shoot1.setPower(pidFw.calculatePower(1000));
+                shoot2.setPower(pidFw.calculatePower(1000));
+                break;
+        }
+        if (gm2.optionsWasPressed()){
+            if (stateFw == StateFw.AUTO){
+                stateFw = StateFw.MANUAL;
+            }
+            else {
+                stateFw = StateFw.AUTO;
+            }
+        }
+    }
+    public void FlyWh(){
 
         boolean IsTagSeen = false;
         for(AprilTagDetection tag:tagProcessor.getDetections()){
             if (tag.id == 20) {
-                shoot1.setPower(pid.calculatePower(ShooterConstants.fwVel(tag.ftcPose.range)));
-                shoot2.setPower(pid.calculatePower(ShooterConstants.fwVel(tag.ftcPose.range)));
+                shoot1.setPower(pidFw.calculatePower(ShooterConstants.fwVel(tag.ftcPose.range)));
+                shoot2.setPower(pidFw.calculatePower(ShooterConstants.fwVel(tag.ftcPose.range)));
                 IsTagSeen = true;
             }
             if (!IsTagSeen){
-                shoot1.setPower(pid.calculatePower(600));
-                shoot2.setPower(pid.calculatePower(600));
+                shoot1.setPower(pidFw.calculatePower(600));
+                shoot2.setPower(pidFw.calculatePower(600));
             }
             telemetryM.addData("Error",shoot1.getVelocity());
             telemetryM.update();
@@ -104,7 +154,5 @@ public class Turret{
 
         telemetryM.update();
     }
-
-
 
 }
