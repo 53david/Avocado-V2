@@ -36,19 +36,19 @@ public class Intake {
         switch (state){
             case IDLE:
                 intakeMotor.setPower(0);
-                transfer.setPosition();
+                transfer.setPosition(0.33);
                 break;
             case INTAKE:
                 intakeMotor.setPower(1);
-                transfer.setPosition();
+                transfer.setPosition(0.33);
                 break;
             case SPIT:
                 intakeMotor.setPower(-1);
-                transfer.setPosition();
+                transfer.setPosition(0.25);
                 break;
             case TRANSFER:
                 intakeMotor.setPower(1);
-                intakeMotor.setPower();
+                intakeMotor.setPower(0.25);
         }
     }
 
