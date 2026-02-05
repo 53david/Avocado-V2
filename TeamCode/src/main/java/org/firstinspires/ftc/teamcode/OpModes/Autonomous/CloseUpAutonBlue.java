@@ -152,7 +152,7 @@ public class CloseUpAutonBlue extends LinearOpMode {
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
         webcam1 = hardwareMap.get(WebcamName.class,"webcam1");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
-        intake = new Intake(intakeMotor);
+        intake = new Intake(intakeMotor,transfer);
         outake = new Outake(shoot1,shoot2);
         storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
         turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM);

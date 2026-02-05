@@ -22,6 +22,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
+@Configurable
 public class Turret{
     private static final double P = 0.02, I = 0,D = 0.002;
     private static final double Kp = 0, Ki = 0, Kd = 0;
@@ -70,16 +71,24 @@ public class Turret{
             flyWh();
     }
     public void flyWh(){
+
+        boolean IsTagSeen = false;
         for(AprilTagDetection tag:tagProcessor.getDetections()){
             if (tag.id == 20) {
                 shoot1.setPower(pid.calculatePower(ShooterConstants.fwVel(tag.ftcPose.range)));
                 shoot2.setPower(pid.calculatePower(ShooterConstants.fwVel(tag.ftcPose.range)));
+                IsTagSeen = true;
             }
+            if (!IsTagSeen){
+                shoot1.setPower(pid.calculatePower(600));
+                shoot2.setPower(pid.calculatePower(600));
+            }
+            telemetryM.addData("Error",shoot1.getVelocity());
+            telemetryM.update();
         }
     }
     public void turretTrack(){
 
-        ArrayList<AprilTagDetection> detections = tagProcessor.getDetections();
         boolean IsTagSeen = false;
         for(AprilTagDetection tag:tagProcessor.getDetections()){
             if (tag.id == 20) {

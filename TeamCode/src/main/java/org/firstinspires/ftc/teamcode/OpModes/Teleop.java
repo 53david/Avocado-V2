@@ -22,12 +22,14 @@ import org.firstinspires.ftc.teamcode.Components.Intake;
 import org.firstinspires.ftc.teamcode.Components.Outake;
 import org.firstinspires.ftc.teamcode.Components.Pivot;
 import org.firstinspires.ftc.teamcode.Components.Storage;
+import org.firstinspires.ftc.teamcode.Components.Turret;
 
 @TeleOp(name = "Vlad e the goat")
 public class Teleop extends LinearOpMode {
-    private DriveTrain chassis; private Intake intake;
+    private DriveTrain chassis; private Intake intake; private Turret turret;
     private Outake outake; Servo transfer;
     private Pivot pivot;
+    WebcamName webcam;
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
     TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
     public static Gamepad prevgm1,prevgm2; int nr = 0;
@@ -45,6 +47,7 @@ public class Teleop extends LinearOpMode {
             gm2.copy(gamepad2);
             pivot.update();
             intake.update();
+            turret.update();
             chassis.update();
             outake.update();
             prevgm1.copy(gm1);
@@ -70,9 +73,8 @@ public class Teleop extends LinearOpMode {
         transfer = hardwareMap.get(Servo.class,"transfer");
         intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
-        intake = new Intake(intakeMotor);
-        outake = new Outake(shoot1,shoot2);
-        pivot = new Pivot(rotate,transfer);
+        intake = new Intake(intakeMotor,transfer);
+        turret = new Turret(rotate,shoot1,shoot2,webcam,telemetryM);
 
     }
 }

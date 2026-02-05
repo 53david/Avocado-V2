@@ -6,28 +6,50 @@ import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 public class Intake {
-    private DcMotorEx intakeMotor;
-    public Intake(DcMotorEx intakeMotor) {
+    DcMotorEx intakeMotor;
+    Servo transfer;
+    public enum State{
+        INTAKE,
+        TRANSFER,
+        SPIT,
+        IDLE,
+
+    };
+    State state = State.IDLE;
+    public Intake(DcMotorEx intakeMotor, Servo transfer) {
         this.intakeMotor = intakeMotor;
+        this.transfer = transfer;
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        MotorConfigurationType m= intakeMotor.getMotorType();
+        m.setAchieveableMaxRPMFraction(1);
+        intakeMotor.setMotorType(m);
+
     }
 
     public void update() {
-        if (gm1.right_bumper==prevgm1.right_bumper && gm1.right_bumper)
-            intakeMotor.setPower(1);
-        else if (gm1.left_bumper==prevgm1.left_bumper && gm1.left_bumper) {
-            intakeMotor.setPower(-1);
+        switch (state){
+            case IDLE:
+                intakeMotor.setPower(0);
+                transfer.setPosition();
+                break;
+            case INTAKE:
+                intakeMotor.setPower(1);
+                transfer.setPosition();
+                break;
+            case SPIT:
+                intakeMotor.setPower(-1);
+                transfer.setPosition();
+                break;
+            case TRANSFER:
+                intakeMotor.setPower(1);
+                intakeMotor.setPower();
         }
-        else if (gm1.cross){
-           intakeMotor.setPower(1);
-        }
-        else {
-            intakeMotor.setPower(0);
-        }
-
     }
 
 }
