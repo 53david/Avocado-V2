@@ -24,7 +24,6 @@ public class Odo {
     public double positionBLUE(){
         return Math.sqrt(Math.pow((pp.getPosX(DistanceUnit.INCH)-BlueGoalX),2)+Math.pow((pp.getPosY(DistanceUnit.INCH)-BlueGoalY),2));
     }
-    public double
     public void update(){
         pp.update();
     }

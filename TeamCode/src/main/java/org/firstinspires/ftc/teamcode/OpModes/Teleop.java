@@ -76,7 +76,7 @@ public class Teleop extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor,transfer);
-        turret = new Turret(rotate,shoot1,shoot2,webcam,telemetryM,gobilda);
+        turret = new Turret(rotate,shoot1,shoot2,webcam,telemetryM);
 
     }
 }
