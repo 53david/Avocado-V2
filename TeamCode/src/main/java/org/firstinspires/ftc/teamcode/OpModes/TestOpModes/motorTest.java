@@ -21,15 +21,11 @@ public class motorTest extends LinearOpMode {
     public static double power = 0;
     @Override
     public void runOpMode(){
-        hardwinit();
         waitForStart();
 
         while (opModeIsActive()){
             motor = new DcMotorImplEx(hardwareMap.getAll(DcMotorController.class).get(id), port);
             motor.setPower(power);
         }
-    }
-    public void hardwinit(){
-
     }
 }
