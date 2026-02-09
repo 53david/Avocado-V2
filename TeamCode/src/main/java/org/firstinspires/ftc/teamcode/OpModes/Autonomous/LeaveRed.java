@@ -9,13 +9,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous
 public class LeaveRed extends LinearOpMode {
     ElapsedTime time = new ElapsedTime();
-    DcMotorEx m1,m2,m3,m4;
+    DcMotorEx m1,m2,m3,m4; //apple silicon 67
     @Override
     public void runOpMode(){
         hardwinit();
         waitForStart();
         while (opModeIsActive()){
-            if (time.milliseconds()<2000) {
+            if (time.milliseconds()<1500) {
                 m1.setPower(1);
                 m2.setPower(-1);
                 m3.setPower(-1);
