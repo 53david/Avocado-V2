@@ -45,13 +45,13 @@ public class Wheelie {
         }
     }
     public void Ascend(){
-        if(timer.milliseconds()<5000){
+        if(timer.milliseconds()<2500){
             wh1.setPower(1);
             wh2.setPower(1);
         }
     }
     public void Descend(){
-        if(timer.milliseconds()<5000){
+        if(timer.milliseconds()<25000){
             wh1.setPower(-1);
             wh2.setPower(-1);
         }
