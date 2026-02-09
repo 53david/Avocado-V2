@@ -159,7 +159,7 @@ public class CloseUpAutonBlue extends LinearOpMode {
         intake = new Intake(intakeMotor,transfer);
         outake = new Outake(shoot1,shoot2);
         storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
-        turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM,gobilda);
+        turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM);
         storage.turner.setPidCoefficients(coefs);
 
     }

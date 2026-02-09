@@ -156,6 +156,6 @@ public class CloseUpAutonRed extends LinearOpMode {
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor,transfer);
-        turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM,gobilda);
+        turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM);
     }
 }
