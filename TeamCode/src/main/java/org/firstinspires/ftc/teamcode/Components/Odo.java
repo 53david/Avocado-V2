@@ -27,4 +27,14 @@ public class Odo {
     public void update(){
         pp.update();
     }
+    public double thetaRed(){
+        return Math.toDegrees(Math.acos(Math.sqrt(Math.pow((pp.getPosX(DistanceUnit.INCH)-RedGoalX),2)+Math.pow((pp.getPosY(DistanceUnit.INCH)-RedGoalY),2)))/pp.getPosX(DistanceUnit.INCH));
+    }
+    public double thetaBlue(){
+        return Math.toDegrees(Math.acos(Math.sqrt(Math.pow((pp.getPosX(DistanceUnit.INCH)-BlueGoalX),2)+Math.pow((pp.getPosY(DistanceUnit.INCH)-BlueGoalY),2)))/pp.getPosX(DistanceUnit.INCH));
+    }
+    public void reset(){
+        pp.resetPosAndIMU();
+        pp.recalibrateIMU();
+    }
 }
