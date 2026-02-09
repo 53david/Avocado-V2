@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -29,6 +30,7 @@ public class Teleop extends LinearOpMode {
     private DriveTrain chassis; private Intake intake; private Turret turret;
     private Outake outake; Servo transfer;
     private Pivot pivot;
+    GoBildaPinpointDriver gobilda;
     WebcamName webcam;
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
     TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
@@ -55,6 +57,8 @@ public class Teleop extends LinearOpMode {
 
     }
     private void initializeHardware() {
+        gobilda = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
+        webcam = hardwareMap.get(WebcamName.class,"Webcam 1");
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
         rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
         leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
@@ -72,7 +76,7 @@ public class Teleop extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor,transfer);
-        turret = new Turret(rotate,shoot1,shoot2,webcam,telemetryM);
+        turret = new Turret(rotate,shoot1,shoot2,webcam,telemetryM,gobilda);
 
     }
 }

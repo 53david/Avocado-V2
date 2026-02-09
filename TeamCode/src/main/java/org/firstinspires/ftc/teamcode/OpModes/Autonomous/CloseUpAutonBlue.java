@@ -7,7 +7,9 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -26,8 +28,10 @@ import org.firstinspires.ftc.teamcode.Components.Turret;
 import org.firstinspires.ftc.teamcode.Localizer.Constants;
 
 @Autonomous (name = "Mascul Fioros BLUE")
+@Disabled
 public class CloseUpAutonBlue extends LinearOpMode {
     private Follower follower;
+    GoBildaPinpointDriver gobilda;
     TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Turret turret;
@@ -123,7 +127,7 @@ public class CloseUpAutonBlue extends LinearOpMode {
 
     }
     public void hardwinit(){
-
+        gobilda = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         pathState = PathState.Start_ShootPos;
@@ -155,7 +159,7 @@ public class CloseUpAutonBlue extends LinearOpMode {
         intake = new Intake(intakeMotor,transfer);
         outake = new Outake(shoot1,shoot2);
         storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
-        turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM);
+        turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM,gobilda);
         storage.turner.setPidCoefficients(coefs);
 
     }

@@ -33,22 +33,19 @@ public class Intake {
     }
 
     public void update() {
-        switch (state){
-            case IDLE:
-                intakeMotor.setPower(0);
-                transfer.setPosition(0.33);
-                break;
-            case INTAKE:
-                intakeMotor.setPower(1);
-                transfer.setPosition(0.33);
-                break;
-            case SPIT:
-                intakeMotor.setPower(-1);
-                transfer.setPosition(0.25);
-                break;
-            case TRANSFER:
-                intakeMotor.setPower(1);
-                intakeMotor.setPower(0.25);
+        if(gm1.right_bumper){
+            intakeMotor.setPower(1);
+        }
+        else if (gm1.left_bumper){
+            transfer.setPosition(0.05);
+            intakeMotor.setPower(-1);
+        }
+        else if (gm1.cross){
+            transfer.setPosition(0.05);
+        }
+        else {
+            transfer.setPosition(0.3);
+            intakeMotor.setPower(0);
         }
     }
 

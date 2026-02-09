@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -21,7 +23,9 @@ import org.firstinspires.ftc.teamcode.Components.Storage;
 import org.firstinspires.ftc.teamcode.Components.Turret;
 
 @Autonomous(name = "Mascul Puturos BLUE")
+@Disabled
 public class NoLocalizerAutonBlue extends LinearOpMode {
+    GoBildaPinpointDriver gobilda;
     private Follower follower; private WebcamName webcam1;
     TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
@@ -44,6 +48,7 @@ public class NoLocalizerAutonBlue extends LinearOpMode {
     }
 
     public void hardwinit(){
+        gobilda = hardwareMap.get(GoBildaPinpointDriver.class,"gobilda");
         timer.reset();
         power = 0.6;
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
@@ -69,7 +74,7 @@ public class NoLocalizerAutonBlue extends LinearOpMode {
         intake = new Intake(intakeMotor,transfer);
         outake = new Outake(shoot1,shoot2);
         storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
-        turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM);
+        turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM,gobilda);
         storage.turner.setPidCoefficients(coefs);
     }
 }
