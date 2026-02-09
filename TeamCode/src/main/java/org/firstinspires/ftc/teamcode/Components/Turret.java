@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Stuff.PIDController;
+import org.firstinspires.ftc.teamcode.Stuff.ShooterConstants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
@@ -26,36 +27,25 @@ import java.util.concurrent.TimeUnit;
 
 @Configurable
 public class Turret{
-    GoBildaPinpointDriver gobilda;
-
     private static double P = 0, I = 0,D = 0;
-    public static double Kp = 14.5;
-    public static double Kf = 5.4;
+    public static double Kp = 0;
+    public static double Kf = 0;
     public static double Ki = 0;
     public static double Kd = 0;
-    public static double vel = 1200;
-    public static long exposure = 2;
-    public static int gain = 200;
-    int allianceID = 20;
-    public double a = 0, target = 0;
     public DcMotorEx rotate,shoot1,shoot2;
-    public AprilTagProcessor tagProcessor;
-    public VisionPortal visionPortal;
-    TelemetryManager telemetryM;
-    double fx=807.567, fy=807.567, cx=345.549 , cy=267.084;
+    public TelemetryManager telemetryM;
+    public GoBildaPinpointDriver gobilda;
     public PIDController pid = new PIDController(P,I,D);
     public PIDFController pidfController = new PIDFController(Kp,Ki,Kd,Kf);
-    WebcamName webcam1;
-    Odo odo = new Odo(gobilda,telemetryM);
+    Odo odo = new Odo(gobilda);
     public enum AllienceState{
         RED,
         BLUE,
     }
     AllienceState state = AllienceState.BLUE;
-    public Turret(DcMotorEx rotate, DcMotorEx shoot1, DcMotorEx shoot2, WebcamName webcam, TelemetryManager telemetryM){
+    public Turret(DcMotorEx rotate, DcMotorEx shoot1, DcMotorEx shoot2, TelemetryManager telemetryM){
         this.rotate=rotate;
         this.telemetryM=telemetryM;
-        this.webcam1=webcam;
         this.shoot2 = shoot2;
         this.shoot1 = shoot1;
         rotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -66,36 +56,31 @@ public class Turret{
     }
 
     public void update(){
-        FlyWh();
-        allienceUpdate();
-        telemetryM.addData("pos",rotate.getCurrentPosition());
-    }
-    public void FlyWh(){
-        shoot1.setPower(pidfController.calculate(shoot1.getVelocity(),1200));
-        pidfController = new PIDFController(Kp,Ki,Kd,Kf);
-        telemetryM.addData("Velocity",shoot1.getVelocity());
-    }
-    public void allienceUpdate(){
-
         switch (state){
             case RED:
+                telemetryM.addLine("RED");
                 telemetryM.addData("target Angle",odo.thetaRed());
                 telemetryM.update();
                 rotate.setPower(pid.calculatePower(odo.thetaRed()));
+                shoot2.setPower(pidfController.calculate(shoot2.getVelocity(), ShooterConstants.fwVel(odo.deltaRED())));
+
                 if (gm1.dpadRightWasPressed()){
                     state = AllienceState.BLUE;
                 }
                 break;
             case BLUE:
+                telemetryM.addLine("BLUE");
                 telemetryM.addData("target Angle",odo.thetaBlue());
                 telemetryM.update();
                 rotate.setPower(pid.calculatePower(odo.thetaBlue()));
+                shoot2.setPower(pidfController.calculate(shoot2.getVelocity(),ShooterConstants.fwVel(odo.deltaBLUE())));
+
                 if (gm1.dpadRightWasPressed()){
                     state = AllienceState.RED;
                 }
                 break;
         }
-
+    }
     }
 
-}
+

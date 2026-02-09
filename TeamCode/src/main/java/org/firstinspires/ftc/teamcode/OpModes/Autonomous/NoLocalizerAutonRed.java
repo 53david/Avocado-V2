@@ -71,7 +71,7 @@ public class NoLocalizerAutonRed extends LinearOpMode {
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor,transfer);
         outake = new Outake(shoot1,shoot2);
-        turret = new Turret(rotate,shoot1,shoot2,webcam1,telemetryM);
+        turret = new Turret(rotate,shoot1,shoot2,telemetryM);
         storage.turner.setPidCoefficients(coefs);
     }
 }
