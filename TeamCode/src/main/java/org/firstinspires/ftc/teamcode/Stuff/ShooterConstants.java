@@ -7,7 +7,7 @@ public class ShooterConstants {
     public static double flywheelOffset = 0;
     public static double hoodOffset = 0;
     public static double fwVel(double delta) {
-        return MathFunctions.clamp(0.0204772 * Math.pow(delta, 2)+ 0.643162 * delta + 712.90909, 600,1400)
+        return MathFunctions.clamp(0.0204772 * Math.pow(delta, 2)+ 0.643162 * delta + 712.90909, 600,1600)
                 +flywheelOffset;
     }
     public static double hoodAngle(double delta){

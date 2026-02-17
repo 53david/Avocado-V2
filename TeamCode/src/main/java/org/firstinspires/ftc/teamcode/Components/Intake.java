@@ -23,7 +23,6 @@ public class Intake {
     public Intake(DcMotorEx intakeMotor, Servo transfer) {
         this.intakeMotor = intakeMotor;
         this.transfer = transfer;
-        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         MotorConfigurationType m= intakeMotor.getMotorType();

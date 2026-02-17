@@ -8,7 +8,9 @@ import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.D;
 import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.F;
 import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.I;
 import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.P;
+import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.vel1;
 
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,54 +29,26 @@ public class Outake {
     private Telemetry telemetry;
     ElapsedTime timer = new ElapsedTime();
     ElapsedTime timer2 = new ElapsedTime();
-    double power;
+    double power1,power2;
     double velocity;
     boolean ok = true; int nr = 0;
-    private static double vel1 = 1275, far = 2000, close = 1200;
     private final DcMotorEx shoot1;
     private final DcMotorEx shoot2;
     private DcMotorEx rotate; CRServo p;
-    PIDFCoefficients pidfcoef = new PIDFCoefficients(P,I,D,F);
+    PIDFController controller = new PIDFController(0.02,0,0,0.00025);
     private Servo servo;
-    enum State {
-        IDLE,
-        CLOSE,
-        FAR,
-    }
 
-    State state;
     public Outake(DcMotorEx shoot1, DcMotorEx shoot2) {
         this.shoot1 = shoot1;
         this.shoot2 = shoot2;
-        state = State.IDLE;
-        shoot1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shoot2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shoot1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
-        shoot2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidfcoef);
         shoot1.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void update() {
-        switch (state){
-            case IDLE:
-                vel1 = 0;
-                break;
-            case FAR:
-                vel1 = far;
-                break;
-            case CLOSE:
-                vel1 = close;
-        }
-        if (gm1.dpadUpWasPressed()){
-            state = State.FAR;
-        }
-        if (gm1.dpadLeftWasPressed()){
-            state = State.CLOSE;
-        }
-        if (gm1.dpadDownWasPressed()){
-            state = State.IDLE;
-        }
-       shoot1.setVelocity(vel1,AngleUnit.DEGREES);
-       shoot2.setVelocity(vel1,AngleUnit.DEGREES);
+        power1 += controller.calculate(shoot1.getVelocity(),900);
+        power1 = Math.min(power1,1); power2 = Math.min(power2,1);
+        power1 = Math.max(power1,-1); power2 = Math.max(power2,-1);
+        shoot1.setPower(power1);
+        shoot2.setPower(power1);
 
     }
 

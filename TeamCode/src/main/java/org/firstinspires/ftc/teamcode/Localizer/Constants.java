@@ -20,14 +20,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Constants {
     private static double deceleration;
     private static double velocity;
-    private static double podY = 48.366/2.54,podX = 48.366/2.54;
+    private static double podY = 48.366*0.0394,podX = 48.366*0.0394;
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(10)
             .forwardZeroPowerAcceleration(-30.116402787518567)
             .lateralZeroPowerAcceleration(-55.77951403633623)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.045,0,0.03,0.0175))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.006,0.02))
             .headingPIDFCoefficients(new PIDFCoefficients(1.4,0,0.08,0.02))
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.2,0,0.002 ,0.75,0.01))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1,0,0.002 ,0.6,0.02))
+            .centripetalScaling(0.0008)
             ;
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
@@ -44,12 +45,12 @@ public class Constants {
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(podY)
             .strafePodX(podX)
-            .distanceUnit(DistanceUnit.MM)
+            .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1.4, 0.90);
+    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1.2, 0.90);
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)

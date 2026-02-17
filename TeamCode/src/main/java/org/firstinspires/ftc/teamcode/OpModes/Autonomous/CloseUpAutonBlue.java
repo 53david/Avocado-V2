@@ -5,6 +5,7 @@ import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
@@ -20,6 +21,8 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Components.DriveTrain;
 import org.firstinspires.ftc.teamcode.Components.Intake;
 import org.firstinspires.ftc.teamcode.Components.Outake;
@@ -28,15 +31,13 @@ import org.firstinspires.ftc.teamcode.Components.Turret;
 import org.firstinspires.ftc.teamcode.Localizer.Constants;
 
 @Autonomous (name = "Mascul Fioros BLUE")
-@Disabled
 public class CloseUpAutonBlue extends LinearOpMode {
     private Follower follower;
     GoBildaPinpointDriver gobilda;
     TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
     private DriveTrain chassis; private Intake intake; private CRServo servo; public static Turret turret;
-    private Outake outake; Servo transfer; private Storage storage; ElapsedTime robotTimer,pathTimer; private ColorRangeSensor colorSensor;
-    Timer timer2;
+    private Outake outake; Servo transfer; private Storage storage; ElapsedTime robotTimer = new ElapsedTime(),pathTimer = new ElapsedTime(); private ColorRangeSensor colorSensor;
     public static PIDCoefficients coefs = new PIDCoefficients(0.38247891 ,0, 0.03728480);
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
     WebcamName webcam1;
@@ -51,7 +52,7 @@ public class CloseUpAutonBlue extends LinearOpMode {
     }
     private PathState pathState;
     private final Pose startPose = new Pose(21.53271028037383,122.69158878504673,Math.toRadians(143));
-    private final Pose shootPose = new Pose(62.80373831775701,84.11214953271028,Math.toRadians(143));
+    private final Pose shootPose = new Pose(72.80373831775701,84.11214953271028,Math.toRadians(143));
     private final Pose ballPose = new Pose (13.906542056074766,83.21495327102804,Math.toRadians(182));
     private final Pose gatePose = new Pose(13.457943925233645,64.82242990654204,Math.toRadians(200));
     private final Pose parkPose = new Pose(30.72897196261682,93.53271028037383,Math.toRadians(143));
@@ -84,34 +85,20 @@ public class CloseUpAutonBlue extends LinearOpMode {
         switch (pathState){
             case Start_ShootPos:
                 follower.followPath(StartShootPos,1,true);
+                telemetryM.addLine("1");
                 if (!follower.isBusy()) {
                         pathState = PathState.ShootPos_Ball1;
+
+                }
+                else if (follower.isBusy()){
+                    pathState = PathState.ShootPos_Ball1;
                 }
                 break;
             case ShootPos_Ball1:
+                telemetryM.addLine("2");
                 follower.followPath(ShootBallPos,1,true);
-                if (!follower.isBusy()) {
-                    pathState = PathState.Ball1_ShootPos;
-                }
                 break;
-            case Ball1_ShootPos:
-                follower.followPath(BallShootPos,1,true);
-                if (!follower.isBusy()) {
-                    pathState = PathState.ShootPos_Gate;
-                }
-                break;
-            case ShootPos_Gate:
-                follower.followPath(ShootGatePos,1,true);
-                if (!follower.isBusy()) {
-                    pathState = PathState.Gate_ShootPos;
-                }
-                break;
-            case Gate_ShootPos:
-                follower.followPath(GateShootPos,1,true);
-                if (!follower.isBusy()) {
-                    pathState = PathState.Gate_ShootPos;
-                    break;
-                }
+
         }
 
     }
@@ -124,43 +111,20 @@ public class CloseUpAutonBlue extends LinearOpMode {
             pathUpdate();
             follower.update();
         }
-
+        telemetryM.addData("Heading",gobilda.getHeading(AngleUnit.DEGREES));
+        telemetryM.addData("X",gobilda.getPosX(DistanceUnit.INCH));
+        telemetryM.addData("Y",gobilda.getPosY(DistanceUnit.INCH));
+        telemetryM.update();
     }
     public void hardwinit(){
         gobilda = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         pathState = PathState.Start_ShootPos;
-        leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
-        rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
-        leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
-        rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
-        MotorConfigurationType m= leftFront.getMotorType();
-        m.setAchieveableMaxRPMFraction(1);
-        leftFront.setMotorType(m);
-        rightFront.setMotorType(m);
-        leftBack.setMotorType(m);
-        rightBack.setMotorType(m);
-        intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
-        shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
-        shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
-        rotate = hardwareMap.get(DcMotorEx.class,"rotate");
-        transfer = hardwareMap.get(Servo.class,"transfer");
-        servo = hardwareMap.get(CRServo.class,"servo");
-        colorSensor = hardwareMap.get(ColorRangeSensor.class,"colorSensor");
-        webcam1 = hardwareMap.get(WebcamName.class,"webcam1");
-        rotate = hardwareMap.get(DcMotorEx.class,"rotate");
-        transfer = hardwareMap.get(Servo.class,"transfer");
-        shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
-        shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
-        rotate = hardwareMap.get(DcMotorEx.class,"rotate");
-        webcam1 = hardwareMap.get(WebcamName.class,"webcam1");
-        chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
-        intake = new Intake(intakeMotor,transfer);
-        outake = new Outake(shoot1,shoot2);
-        storage = new Storage(transfer,servo,intakeMotor,colorSensor,telemetry);
-        turret = new Turret(rotate,shoot1,shoot2,telemetryM);
-        storage.turner.setPidCoefficients(coefs);
+        gobilda.setHeading(143, AngleUnit.DEGREES);
+        gobilda.setPosX(21.53271028037383, DistanceUnit.INCH);
+        gobilda.setPosY(122.69158878504673,DistanceUnit.INCH);
+
 
     }
 }

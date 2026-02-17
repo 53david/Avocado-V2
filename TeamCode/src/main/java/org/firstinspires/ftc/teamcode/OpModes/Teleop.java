@@ -57,7 +57,6 @@ public class Teleop extends LinearOpMode {
 
     }
     private void initializeHardware() {
-        gobilda = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
         webcam = hardwareMap.get(WebcamName.class,"Webcam 1");
         leftFront = hardwareMap.get(DcMotorEx.class,"leftFront");
         rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
@@ -69,6 +68,7 @@ public class Teleop extends LinearOpMode {
         rightFront.setMotorType(m);
         leftBack.setMotorType(m);
         rightBack.setMotorType(m);
+        gobilda = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
         shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
         shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
@@ -76,7 +76,7 @@ public class Teleop extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
         intake = new Intake(intakeMotor,transfer);
-        turret = new Turret(rotate,shoot1,shoot2,telemetryM);
+        turret = new Turret(rotate,shoot1,shoot2,telemetryM,webcam,gobilda);
 
     }
 }

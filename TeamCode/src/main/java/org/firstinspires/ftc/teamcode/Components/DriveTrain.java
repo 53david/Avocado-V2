@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Stuff.PIDController;
 @Configurable
 public class DriveTrain {
     private DcMotorEx leftFront, rightFront, leftBack, rightBack;
-    boolean ok; private static double multiplier = 0.60, multi = 1.25;
+    boolean ok; private static double multiplier = 0.70, multi = 1.8;
     private PIDController tuner = new PIDController(0,0,0);
     public DriveTrain(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack) {
 
