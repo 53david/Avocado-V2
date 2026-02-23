@@ -20,14 +20,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Constants {
     private static double deceleration;
     private static double velocity;
-    private static double podY = 48.366*0.0394,podX = 48.366*0.0394;
+    public static double res = 2000/(Math.PI * 31);
+    public static double podY = 48.366*0.0394,podX = 48.366*0.0394;
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(10)
+            .mass(10.8)
             .forwardZeroPowerAcceleration(-30.116402787518567)
             .lateralZeroPowerAcceleration(-55.77951403633623)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.006,0.02))
-            .headingPIDFCoefficients(new PIDFCoefficients(1.4,0,0.08,0.02))
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.1,0,0.002 ,0.6,0.02))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.08,0,0.002,0.02))
+            .headingPIDFCoefficients(new PIDFCoefficients(0.6,0,0.002,0.02))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.3,0,0.03 ,0.7,0.02))
             .centripetalScaling(0.0008)
             ;
     public static MecanumConstants driveConstants = new MecanumConstants()
@@ -47,10 +48,10 @@ public class Constants {
             .strafePodX(podX)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
-            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
+            //.encoderResolution(res,DistanceUnit.MM)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1.2, 0.90);
+    public static PathConstraints pathConstraints = new PathConstraints(0.95, 100, 1.5, 0.90);
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)

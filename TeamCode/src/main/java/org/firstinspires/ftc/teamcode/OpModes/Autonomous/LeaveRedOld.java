@@ -15,13 +15,12 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous
-public class LeaveRed extends LinearOpMode {
+public class LeaveRedOld extends LinearOpMode {
 
     public static double Voltage = 0;
     public static double x =0;
     double vel1 =0;
     public static double multi;
-    boolean ok =false;
     Servo transfer;
     public double rpm = 1450;
     PIDController controller = new PIDController(0.00007,0,0);
@@ -42,45 +41,22 @@ public class LeaveRed extends LinearOpMode {
             shoot2.setPower(vel1);
             rotate.setPower(pid.calculatePower(rotate.getCurrentPosition()/(384.5 * (130.0/34.0)) * Math.PI * 2.0));
             pid.setTargetPosition(Math.PI/180 * (-x));
-            if (Math.abs(shoot2.getVelocity())>1350 && ok == false){
+            if (Math.abs(shoot2.getVelocity())>1350){
                 intake.setPower(1);
                 transfer.setPosition(0.05);
             }
-            else if (ok==true){
-                transfer.setPosition(0.3);
-            }
             else {
+                intake.setPower(0);
                 transfer.setPosition(0.3);
-                intake.setPower(0);
             }
-            if (time.milliseconds()>12000 && time.milliseconds()<13000){
-                ok= true;
-                m1.setPower(-1);
-                m2.setPower(-1);
-                m3.setPower(-1);
-                m4.setPower(-1);
-                intake.setPower(1);
-
+            if (time.milliseconds()>15000){
+                rpm = 0;
             }
-            if (time.milliseconds()>13000 && time.milliseconds()<14000){
+            if (time.milliseconds()>27500 && time.milliseconds()<29000) {
                 m1.setPower(1);
-                m2.setPower(1);
-                m3.setPower(1);
-                m4.setPower(1);
-                intake.setPower(0);
-            }
-            if (time.milliseconds()>14000 && time.milliseconds()<14500){
-                m1.setPower(0);
-                m2.setPower(0);
-                m3.setPower(0);
-                m4.setPower(0);
-                ok=true;
-            }
-            if (time.milliseconds()>29000 && time.milliseconds()<30000) {
-                m1.setPower(-1);
                 m2.setPower(-1);
                 m3.setPower(-1);
-                m4.setPower(-1);
+                m4.setPower(1);
             }
             else {
                 m1.setPower(0);

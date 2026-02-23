@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 public class Intake {
-    DcMotorEx intakeMotor;
+    public static DcMotorEx intakeMotor;
     Servo transfer;
     public enum State{
         INTAKE,
@@ -32,20 +32,25 @@ public class Intake {
     }
 
     public void update() {
-        if(gm1.right_bumper){
+        if(gm1.right_bumper && gm1.right_bumper == prevgm1.right_bumper){
+
             intakeMotor.setPower(1);
         }
-        else if (gm1.left_bumper){
+        else if (gm1.left_bumper && gm1.left_bumper == prevgm1.left_bumper){
             transfer.setPosition(0.05);
             intakeMotor.setPower(-1);
-        }
-        else if (gm1.cross){
-            transfer.setPosition(0.05);
         }
         else {
             transfer.setPosition(0.3);
             intakeMotor.setPower(0);
         }
-    }
+        if (gm1.cross && gm1.cross == prevgm1.cross){
+            transfer.setPosition(0.05);
+            if (Turret.getVelo()>1100){
+                intakeMotor.setPower(1);
+            }
 
+        }
+
+}
 }

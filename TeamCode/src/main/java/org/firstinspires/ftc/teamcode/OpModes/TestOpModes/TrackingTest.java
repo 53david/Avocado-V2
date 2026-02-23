@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.OpModes.TestOpModes;
+import static org.firstinspires.ftc.teamcode.Localizer.Constants.res;
 import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.Kp;
 import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.Ki;
 import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.Kd;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Stuff.PIDController;
 
 import com.bylazar.configurables.annotations.Configurable;
@@ -28,7 +31,7 @@ public class TrackingTest extends LinearOpMode {
     private DcMotorEx leftFront, rightFront, leftBack, rightBack;
     public static double powerOffset = 0.7;
     public static double target = 0;
-    public double gearRatio = 130.0 / 24.0;
+    public double gearRatio = 130.0 / 34.0;
     TelemetryManager telemetryM;
     GoBildaPinpointDriver pp;
     Odo odo;
@@ -46,18 +49,18 @@ public class TrackingTest extends LinearOpMode {
             telemetryM.addData("delta Red",odo.deltaRED());
             telemetryM.addData("Theta Blue",odo.thetaBlue());
             telemetryM.addData("Theta Red", odo.thetaRed());
-            telemetryM.addData("asjndjhg",odo.niggerX());
-            telemetryM.addData("amjksduy",odo.niggerY());
             telemetryM.addData("pos x",odo.podX());
             telemetryM.addData("pos y",odo.podY());
-            telemetryM.addData("Velocity Blue", ShooterConstants.fwVel(odo.deltaBLUE()));
-            telemetryM.addData("Velocity Red", ShooterConstants.fwVel(odo.deltaRED()));
+            telemetryM.addData("heading",Odo.getCurrentPosition().h);
+            telemetryM.addData("distance",Odo.distance()*0.0394);
+            telemetryM.addData("Velocity Blue", ShooterConstants.fwVel(Odo.distance()*0.0394));
             telemetryM.update();
+
             odo.update();
-            rotate.setPower(pid.calculatePower(rotate.getCurrentPosition() / (384.5 * gearRatio) * Math.PI * 2.0) * powerOffset);
+            rotate.setPower(pid.calculatePower(rotate.getCurrentPosition()/(384.5 * gearRatio) * Math.PI * 2.0));
             pid.setTargetPosition(Math.PI/180 * target);
             if (gm1.circleWasPressed()){
-                odo.resetBlue();
+                odo.reset();
             }
         }
     }
@@ -67,6 +70,7 @@ public class TrackingTest extends LinearOpMode {
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         pp =hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
         odo = new Odo(pp);
+        pp.setEncoderResolution(res, DistanceUnit.MM);
         rotate.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rotate.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
     }
