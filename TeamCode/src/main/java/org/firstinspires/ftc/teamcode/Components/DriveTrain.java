@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.Stuff.PIDController;
 
 @Configurable
 public class DriveTrain {
+    public static double Voltage = 0;
     private DcMotorEx leftFront, rightFront, leftBack, rightBack;
     boolean ok; private static double multiplier = 1, multi = 1;
     private PIDController tuner = new PIDController(0,0,0);
@@ -26,10 +27,20 @@ public class DriveTrain {
         this.rightBack = rightBack;
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        rightFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        leftBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        rightBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        MotorConfigurationType m= leftFront.getMotorType();
+        m.setAchieveableMaxRPMFraction(1);
+        leftFront.setMotorType(m);
+        rightFront.setMotorType(m);
+        leftBack.setMotorType(m);
+        rightBack.setMotorType(m);
 
     }
 
@@ -38,15 +49,22 @@ public class DriveTrain {
         double y = gm1.left_stick_y;
         double x = -gm1.left_stick_x * 1.1;
         double rx = (gm1.left_trigger - gm1.right_trigger) * multiplier;
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPower = ((y + x + rx) / denominator) * multi;
-        double backLeftPower = ((y - x + rx) / denominator) * multi;
-        double frontRightPower = ((y - x - rx) / denominator) * multi;
-        double backRightPower = ((y + x - rx) / denominator) * multi;
-        leftFront.setPower(frontLeftPower);
-        leftBack.setPower(backLeftPower);
-        rightFront.setPower(frontRightPower);
-        rightBack.setPower(backRightPower);
+
+        double frontLeftPower = (y + x + rx);
+        double backLeftPower = (y - x + rx);
+        double frontRightPower = (y - x - rx);
+        double backRightPower = (y + x - rx);
+
+        double denominator = Math.max(Math.abs(frontLeftPower), Math.abs(backLeftPower));
+        denominator = Math.max(denominator, Math.abs(frontRightPower));
+        denominator = Math.max(denominator, Math.abs(backRightPower));
+        denominator = Math.max(denominator, 1.0);
+
+        leftFront.setPower((frontLeftPower / denominator) * Voltage);
+        leftBack.setPower((backLeftPower / denominator) * Voltage);
+        rightFront.setPower((frontRightPower / denominator) * Voltage);
+        rightBack.setPower((backRightPower / denominator) * Voltage);
+
     }
 
 

@@ -10,13 +10,10 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -27,8 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Components.DriveTrain;
 import org.firstinspires.ftc.teamcode.Components.Intake;
 import org.firstinspires.ftc.teamcode.Components.Outake;
-import org.firstinspires.ftc.teamcode.Components.Pivot;
-import org.firstinspires.ftc.teamcode.Components.Storage;
+
 import org.firstinspires.ftc.teamcode.Components.Turret;
 
 @TeleOp(name = "Vlad e the goat")
@@ -36,7 +32,6 @@ public class Teleop extends LinearOpMode {
     public static IMU imu;
     private DriveTrain chassis; private Intake intake; private Turret turret;
     private Outake outake; Servo transfer;
-    private Pivot pivot;
     GoBildaPinpointDriver gobilda;
     WebcamName webcam;
     DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
@@ -75,12 +70,6 @@ public class Teleop extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotorEx.class,"rightFront");
         leftBack = hardwareMap.get(DcMotorEx.class,"leftBack");
         rightBack = hardwareMap.get(DcMotorEx.class,"rightBack");
-        MotorConfigurationType m= leftFront.getMotorType();
-        m.setAchieveableMaxRPMFraction(1);
-        leftFront.setMotorType(m);
-        rightFront.setMotorType(m);
-        leftBack.setMotorType(m);
-        rightBack.setMotorType(m);
         gobilda = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
         gobilda.resetPosAndIMU();
         shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
@@ -93,6 +82,6 @@ public class Teleop extends LinearOpMode {
         turret = new Turret(rotate,shoot1,shoot2,telemetryM,webcam,gobilda);
         gobilda.setEncoderResolution(res, DistanceUnit.MM);
         Turret.Voltage = 12.0/hardwareMap.getAll(VoltageSensor.class).get(0).getVoltage();
-
+        DriveTrain.Voltage = 12.0/hardwareMap.getAll(VoltageSensor.class).get(0).getVoltage();
     }
 }

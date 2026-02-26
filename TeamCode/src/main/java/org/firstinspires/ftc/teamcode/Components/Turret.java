@@ -240,10 +240,7 @@ public class Turret {
                 telemetryM.addLine("Manual");
                 break;
             case Auto:
-                SparkFunOTOS.Pose2D pos = Odo.getCurrentPosition();
-                pos.h = Teleop.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-                updateFacingDirection(pos);
-                odo.setPosition(new SparkFunOTOS.Pose2D(Odo.getCurrentPosition().x, Odo.getCurrentPosition().y, pos.h));
+
                 if (gm1.circle && prevgm1.circle!=gm1.circle) {
                     bstate = State.Manual;
                 }
