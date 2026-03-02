@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.OpModes.TestOpModes;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kd;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Ki;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kp;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Ks;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kv;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kd;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ki;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kp;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ks;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kv;
 
-import android.util.Size;
 
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.bylazar.camerastream.PanelsCameraStream;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
@@ -19,16 +17,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Stuff.ShooterConstants;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
 import java.util.ArrayList;
 
 @Configurable
+@Disabled
 @TeleOp (name="Formula")
 public class BetterFormula extends LinearOpMode {
     DcMotorEx shoot1,shoot2,m2;

@@ -22,7 +22,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Components.DriveTrain;
 import org.firstinspires.ftc.teamcode.Components.Intake;
-import org.firstinspires.ftc.teamcode.Components.Outake;
 
 import org.firstinspires.ftc.teamcode.Components.Turret;
 
@@ -30,10 +29,9 @@ import org.firstinspires.ftc.teamcode.Components.Turret;
 public class Teleop extends LinearOpMode {
     public static IMU imu;
     private DriveTrain chassis; private Intake intake; private Turret turret;
-    private Outake outake; Servo transfer;
     GoBildaPinpointDriver gobilda;
     WebcamName webcam;
-    DcMotorEx intakeMotor,rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
+    DcMotorEx rotate,leftFront,leftBack,rightBack,rightFront,shoot1,shoot2;
     TelemetryManager telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
     public static Gamepad prevgm1,prevgm2; int nr = 0;
     public static Gamepad gm1,gm2;
@@ -74,10 +72,8 @@ public class Teleop extends LinearOpMode {
         shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
         shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
-        transfer = hardwareMap.get(Servo.class,"transfer");
-        intakeMotor = hardwareMap.get(DcMotorEx.class,"intake");
         chassis = new DriveTrain(leftFront,rightFront,leftBack,rightBack);
-        intake = new Intake(intakeMotor,transfer);
+        intake = new Intake();
         turret = new Turret(rotate,shoot1,shoot2,telemetryM,webcam,gobilda);
         gobilda.setEncoderResolution(res, DistanceUnit.MM);
         Turret.Voltage = 12.0/hardwareMap.getAll(VoltageSensor.class).get(0).getVoltage();

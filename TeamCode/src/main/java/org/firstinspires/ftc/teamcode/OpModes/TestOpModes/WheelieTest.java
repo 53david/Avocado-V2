@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.TestOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import org.firstinspires.ftc.teamcode.Components.Wheelie;
 
 @TeleOp(name = "Wheelie Test")
+@Disabled
 public class WheelieTest extends LinearOpMode {
     CRServo wh1,wh2;
     Wheelie wheelie;

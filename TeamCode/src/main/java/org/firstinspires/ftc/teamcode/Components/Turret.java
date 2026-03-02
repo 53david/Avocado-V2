@@ -4,13 +4,12 @@ package org.firstinspires.ftc.teamcode.Components;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
 import static org.firstinspires.ftc.teamcode.OpModes.TestOpModes.BetterFormula.rpm;
-import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.vel1;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Ka;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kd;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Ki;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kp;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Ks;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kv;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ka;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kd;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ki;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kp;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ks;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kv;
 import android.util.Size;
 
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -192,7 +191,7 @@ public class Turret {
         telemetryM.addData("vel",shoot2.getVelocity());
         odo.update();
 
-        vel1 = controller.calculate(-shoot2.getVelocity(),rpm);
+        double vel1 = controller.calculate(-shoot2.getVelocity(),rpm);
         vel1 += Kv * rpm + Ks;
         vel1 *= Voltage;
         shoot1.setPower(vel1);

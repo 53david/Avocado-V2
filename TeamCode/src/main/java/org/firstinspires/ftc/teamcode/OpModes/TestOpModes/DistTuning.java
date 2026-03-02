@@ -1,17 +1,18 @@
 package org.firstinspires.ftc.teamcode.OpModes.TestOpModes;
 
-import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.vel1;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kd;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Ki;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kp;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Ks;
-import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kv;
+
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kd;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ki;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kp;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ks;
+import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kv;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -21,6 +22,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.Components.Odo;
 
 @TeleOp
+@Disabled
 public class DistTuning extends LinearOpMode {
     public static double rpm = 0;
     public static IMU imu;
@@ -35,7 +37,7 @@ public class DistTuning extends LinearOpMode {
         hardwinit();
         waitForStart();
         while (opModeIsActive()){
-            vel1 = controller.calculate(-shoot2.getVelocity(),rpm);
+            double vel1 = controller.calculate(-shoot2.getVelocity(),rpm);
             vel1 += Kv * rpm + Ks;
             vel1 *= Voltage;
             shoot1.setPower(vel1);

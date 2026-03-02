@@ -4,7 +4,7 @@ import com.pedropathing.follower.Follower;
 
 import org.firstinspires.ftc.teamcode.Trajectories.CloseBlueTrajectory;
 
-public class CloseBlueFollow {
+public class CloseBlueFollower {
     public Follower follower;
     public enum State{
         StartShoot,
@@ -16,7 +16,7 @@ public class CloseBlueFollow {
         Ball2Shoot,
     };
     State state;
-    public CloseBlueFollow(){
+    public CloseBlueFollower(){
         state = State.StartShoot;
         CloseBlueTrajectory.follower = follower;
         CloseBlueTrajectory.buildPaths();
