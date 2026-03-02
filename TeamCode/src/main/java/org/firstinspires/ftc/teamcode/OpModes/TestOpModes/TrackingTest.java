@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.OpModes.TestOpModes;
 import static org.firstinspires.ftc.teamcode.Pedro.Constants.res;
-import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.Kp;
-import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.Ki;
-import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.Kd;
+import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Kp;
+import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Ki;
+import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Kd;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Stuff.PIDController;
+import org.firstinspires.ftc.teamcode.Wrappers.PIDController;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.teamcode.Components.Odo;
-import org.firstinspires.ftc.teamcode.Stuff.ShooterConstants;
+import org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants;
 
 @TeleOp
 @Configurable

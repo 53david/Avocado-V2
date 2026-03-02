@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Stuff.PIDController;
+import org.firstinspires.ftc.teamcode.Wrappers.PIDController;
 @Configurable
 public class Storage {
     private final CRServo revolver; private RevColorSensorV3 v8;

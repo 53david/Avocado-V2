@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Components.Odo;
 import org.firstinspires.ftc.teamcode.Components.Turret;
-import org.firstinspires.ftc.teamcode.Stuff.PIDController;
+import org.firstinspires.ftc.teamcode.Wrappers.PIDController;
 
 
 @TeleOp

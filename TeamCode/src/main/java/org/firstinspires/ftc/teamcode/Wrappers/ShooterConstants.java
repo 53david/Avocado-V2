@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Stuff;
+package org.firstinspires.ftc.teamcode.Wrappers;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.math.MathFunctions;

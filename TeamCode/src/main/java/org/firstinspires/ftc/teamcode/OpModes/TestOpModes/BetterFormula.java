@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes.TestOpModes;
-import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kd;
-import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ki;
-import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kp;
-import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ks;
-import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kv;
+import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Kd;
+import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Ki;
+import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Kp;
+import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Ks;
+import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Kv;
 
 
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -16,8 +16,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
-
-import java.util.ArrayList;
 
 @Configurable
 @Disabled

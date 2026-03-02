@@ -4,16 +4,14 @@ package org.firstinspires.ftc.teamcode.Components;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
 import static org.firstinspires.ftc.teamcode.OpModes.TestOpModes.BetterFormula.rpm;
-import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ka;
-import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kd;
-import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ki;
-import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kp;
-import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Ks;
-import static org.firstinspires.ftc.teamcode.Stuff.ShooterConstants.Kv;
+import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Kd;
+import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Ki;
+import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Kp;
+import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Ks;
+import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Kv;
 import android.util.Size;
 
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.bylazar.camerastream.PanelsCameraStream;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.TelemetryManager;
@@ -27,13 +25,11 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.OpModes.Teleop;
-import org.firstinspires.ftc.teamcode.Stuff.ShooterConstants;
+import org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
-import java.util.concurrent.TimeUnit;
 
 @Configurable
 public class Turret {
@@ -57,7 +53,7 @@ public class Turret {
     public double globalError;
 
     PIDController pid = new PIDController(0.01,0,0.0002);
-    org.firstinspires.ftc.teamcode.Stuff.PIDController turretController = new org.firstinspires.ftc.teamcode.Stuff.PIDController(1.2,0,0.05);
+    org.firstinspires.ftc.teamcode.Wrappers.PIDController turretController = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(1.2,0,0.05);
     PIDController controller = new PIDController(Kp,Ki,Kd);
 
     public enum AllienceState {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Stuff;
+package org.firstinspires.ftc.teamcode.Wrappers;
 
 import static org.firstinspires.ftc.teamcode.Components.Intake.intakeMotor;
 import static org.firstinspires.ftc.teamcode.Components.Intake.transfer;
