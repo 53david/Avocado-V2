@@ -4,7 +4,7 @@ import com.bylazar.configurables.annotations.Configurable;
 
 @Configurable
 public class Sigma {
-    public static double Kp = 0.004;
+    public static double Kp = 0.005;
     public static double Ki = 0;
     public static double Kd = 0;
     public static double Ks = 0.2;

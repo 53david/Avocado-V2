@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.OpModes.TestOpModes;
-import static org.firstinspires.ftc.teamcode.Localizer.Constants.res;
+import static org.firstinspires.ftc.teamcode.Pedro.Constants.res;
 import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.Kp;
 import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.Ki;
 import static org.firstinspires.ftc.teamcode.Stuff.TurretPID.Kd;
@@ -13,13 +13,9 @@ import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.teamcode.Components.Odo;
 import org.firstinspires.ftc.teamcode.Stuff.ShooterConstants;
@@ -54,6 +50,8 @@ public class TrackingTest extends LinearOpMode {
             telemetryM.addData("heading",Odo.getCurrentPosition().h);
             telemetryM.addData("distance",Odo.distance()*0.0394);
             telemetryM.addData("Velocity Blue", ShooterConstants.fwVel(Odo.distance()*0.0394));
+            telemetryM.addData("Encoder X",pp.getEncoderX());
+            telemetryM.addData("Encoder Y",pp.getEncoderY());
             telemetryM.update();
 
             odo.update();

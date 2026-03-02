@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
-import static org.firstinspires.ftc.teamcode.Stuff.FlyWheelPIDF.vel1;
 import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Ks;
 import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kv;
 import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kp;
 import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Ki;
 import static org.firstinspires.ftc.teamcode.Stuff.Sigma.Kd;
 
-import static org.firstinspires.ftc.teamcode.Localizer.Constants.res;
+import static org.firstinspires.ftc.teamcode.Pedro.Constants.res;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -37,7 +36,7 @@ import org.firstinspires.ftc.teamcode.Components.Intake;
 import org.firstinspires.ftc.teamcode.Components.Outake;
 import org.firstinspires.ftc.teamcode.Components.Storage;
 import org.firstinspires.ftc.teamcode.Components.Turret;
-import org.firstinspires.ftc.teamcode.Localizer.Constants;
+import org.firstinspires.ftc.teamcode.Pedro.Constants;
 
 @Autonomous (name = "Mascul Fioros BLUE")
 public class FarBlue extends LinearOpMode {
