@@ -1,22 +1,25 @@
 package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
+import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.PathFollower.CloseBlueFollower;
-import org.firstinspires.ftc.teamcode.RobotLogic.Robot;
+import org.firstinspires.ftc.teamcode.Pedro.Constants;
+import org.firstinspires.ftc.teamcode.Trajectories.CloseBlueTrajectory;
 
 
 @Autonomous
 public class TestAuton extends LinearOpMode {
-    CloseBlueFollower follower = new CloseBlueFollower();
-    Robot robot = new Robot();
+    Follower follower;
     @Override
     public void runOpMode(){
+        follower = Constants.createFollower(hardwareMap);
+        CloseBlueTrajectory trajectory = new CloseBlueTrajectory(follower);
+
         waitForStart();
         while (opModeIsActive()){
             follower.update();
-            robot.update();
+            trajectory.update();
         }
     }
 }

@@ -47,9 +47,6 @@ public class Intake {
         }
         if (gm1.cross && gm1.cross == prevgm1.cross){
             transfer.setPosition(0.05);
-            if (Turret.getVelo()>1100){
-                intakeMotor.setPower(1);
-            }
 
         }
 

@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.Components.DriveTrain;
 import org.firstinspires.ftc.teamcode.Components.Intake;
 
 import org.firstinspires.ftc.teamcode.Components.Turret;
+import org.firstinspires.ftc.teamcode.Wrappers.Initializer;
 
 @TeleOp(name = "Vlad e the goat")
 public class Teleop extends LinearOpMode {
@@ -56,6 +57,7 @@ public class Teleop extends LinearOpMode {
 
     }
     private void initializeHardware() {
+        Initializer.start(hardwareMap);
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,

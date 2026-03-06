@@ -45,6 +45,7 @@ public class Constants {
             .strafePodX(podX)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
+            .customEncoderResolution(res)
             //.encoderResolution(res,DistanceUnit.MM)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);

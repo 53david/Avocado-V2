@@ -8,18 +8,18 @@ import com.pedropathing.paths.PathChain;
 
 public class CloseBlueTrajectory {
 
-    public static Pose startPose = new Pose(32.000, 135.000, Math.toRadians(270));
-    private static Pose shootPose = new Pose(55.000, 85.000, Math.toRadians(180));
-    private static Pose  ballPose1 = new Pose(20.000, 60.000, Math.toRadians(180));
-    private static Pose  ballPose2 = new Pose(20.000, 85.000, Math.toRadians(180));
-    private static Pose  gatePose = new Pose(14.000, 60.000, Math.toRadians(150));
+    public static final Pose startPose = new Pose(32.000, 135.000, Math.toRadians(270));
+    private static final Pose shootPose = new Pose(55.000, 85.000, Math.toRadians(180));
+    private static final Pose  ballPose1 = new Pose(20.000, 60.000, Math.toRadians(180));
+    private static final Pose  ballPose2 = new Pose(20.000, 85.000, Math.toRadians(180));
+    private static final Pose  gatePose = new Pose(14.000, 60.000, Math.toRadians(150));
 
-    public static Pose control1 = new Pose(67.000,63.000);
-    public static Pose control2 = new Pose(44.000,66.000);
+    public static final Pose control1 = new Pose(67.000,63.000);
+    public static final Pose control2 = new Pose(44.000,66.000);
 
-    public static PathChain StartShootPos, ShootBall1Pos, Ball1ShootPos,ShootBall2Pos ,Ball2ShootPos, ShootGatePos, GateShootPos;
-    public static Follower follower;
-    public static void buildPaths() {
+    public  PathChain StartShootPos, ShootBall1Pos, Ball1ShootPos,ShootBall2Pos ,Ball2ShootPos, ShootGatePos, GateShootPos;
+    public  Follower follower;
+    public void buildPaths() {
         StartShootPos = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, shootPose))
                 .setLinearHeadingInterpolation(startPose.getHeading(), shootPose.getHeading())
@@ -48,5 +48,61 @@ public class CloseBlueTrajectory {
                 .addPath(new BezierLine(ballPose2,shootPose))
                 .setLinearHeadingInterpolation(ballPose2.getHeading(),shootPose.getHeading())
                 .build();
+    }
+    public enum State{
+        StartShoot,
+        ShootBall1,
+        Ball1Shoot,
+        ShootGate,
+        GateShoot,
+        ShootBall2,
+        Ball2Shoot,
+    };
+    State state;
+    public CloseBlueTrajectory(Follower follower){
+        this.follower = follower;
+        state = State.StartShoot;
+        buildPaths();
+    }
+
+    public void update(){
+        follower.update();
+        switch (state){
+            case StartShoot:
+                follower.followPath(StartShootPos);
+                if (!follower.isBusy())
+                    state = State.ShootBall1;
+                break;
+            case ShootBall1:
+                follower.followPath(ShootBall1Pos);
+                if (!follower.isBusy())
+                    state = State.Ball1Shoot;
+                break;
+            case Ball1Shoot:
+                follower.followPath(Ball1ShootPos);
+                if (!follower.isBusy())
+                    state = State.ShootBall2;
+                break;
+            case ShootBall2:
+                follower.followPath(ShootBall2Pos);
+                if (!follower.isBusy())
+                    state = State.Ball2Shoot;
+                break;
+            case Ball2Shoot:
+                follower.followPath(Ball2ShootPos);
+                if (!follower.isBusy())
+                    state = State.ShootGate;
+                break;
+            case ShootGate:
+                follower.followPath(ShootGatePos);
+                if (!follower.isBusy())
+                    state = State.GateShoot;
+                break;
+            case GateShoot:
+                follower.followPath(GateShootPos);
+                if (!follower.isBusy())
+                    state = State.ShootGate;
+                break;
+        }
     }
 }

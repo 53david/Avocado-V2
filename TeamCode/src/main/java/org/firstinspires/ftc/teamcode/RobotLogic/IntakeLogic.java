@@ -4,19 +4,19 @@ import static org.firstinspires.ftc.teamcode.Components.Intake.intakeMotor;
 
 public class IntakeLogic {
     public enum State {
-        Idle,
-        Intake,
+        IDLE,
+        INTAKE,
     }
     State state;
     public IntakeLogic(){
-        state = State.Idle;
+        state = State.IDLE;
     }
     public void update(){
         switch (state){
-            case Idle:
+            case IDLE:
                 intakeMotor.setPower(0);
                 break;
-            case Intake:
+            case INTAKE:
                 intakeMotor.setPower(1);
                 break;
         }

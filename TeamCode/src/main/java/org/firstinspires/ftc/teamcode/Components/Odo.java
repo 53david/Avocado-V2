@@ -13,13 +13,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 
 public class Odo {
+    double res = 2000/(Math.PI * 31);
     public static double RedGoalX = 144,RedGoalY = 144,BlueGoalX = 144, BlueGoalY = 0;
     TelemetryManager telemetry;
     static GoBildaPinpointDriver pp;
     public Odo(GoBildaPinpointDriver pp){
         this.pp=pp;
         pp.setOffsets(48.366 * 0.0394,48.366 * 0.0394, DistanceUnit.INCH);
-        pp.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        pp.setEncoderResolution(res,
+                DistanceUnit.MM);
         pp.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
     }
     public double deltaRED(){
