@@ -20,6 +20,7 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -35,6 +36,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 public class Turret {
     public static double KP = 0.006;
     public static double KD = 0.003;
+    public static double P = 0;
+    public static double D = 0;
     double allianceID = 20;
     public static long exposure = 2;
     public static int gain = 200;
@@ -53,9 +56,10 @@ public class Turret {
     public double globalError;
 
     PIDController pid = new PIDController(KP,0,KD);
-    org.firstinspires.ftc.teamcode.Wrappers.PIDController turretController = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(1.2,0,0.05);
+    org.firstinspires.ftc.teamcode.Wrappers.PIDController turretController = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(1.3,0,0.08);
     PIDController controller = new PIDController(Kp,Ki,Kd);
-    PIDController pd = new PIDController(0,0,0);
+    org.firstinspires.ftc.teamcode.Wrappers.PIDController pd = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(P,0,D);
+
 
 
     public enum AllienceState {
@@ -208,7 +212,6 @@ public class Turret {
         shoot1.setPower(vel1);
         shoot2.setPower(vel1);
         telemetryM.update();
-        AllienceUpdate();
         TurretUpdate();
         ShooterUpdate();
     }
@@ -278,6 +281,13 @@ public class Turret {
                 if (gm1.dpad_right && gm1.dpad_right!= prevgm1.dpad_right)
                     shootState = ShootState.IDLE;
                 break;
+        }
+    }
+    public void test(){
+        PIDCoefficients coef = new PIDCoefficients(P,0,D);
+        pd.setPidCoefficients(coef);
+        if (CameraOffset()!=1e9) {
+            rotate.setPower(pd.calculatePower(CameraOffset()));
         }
     }
 
