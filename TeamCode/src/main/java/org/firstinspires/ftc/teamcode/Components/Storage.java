@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Wrappers.PIDController;
 @Configurable
 public class Storage {
+    /// OLD DEPOSIT (NOT SIGMA)
     private final CRServo revolver; private RevColorSensorV3 v8;
     ElapsedTime timer = new ElapsedTime();
     ElapsedTime time1 = new ElapsedTime();ElapsedTime time2 = new ElapsedTime();
