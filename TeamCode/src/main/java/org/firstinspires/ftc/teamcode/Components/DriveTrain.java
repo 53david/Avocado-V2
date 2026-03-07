@@ -65,8 +65,8 @@ public class DriveTrain {
         denominator = Math.max(denominator, Math.abs(backRightPower));
         denominator = Math.max(denominator, 1.0);
 
-        leftFront.setPower(((frontLeftPower / denominator)+ ks1));
-        leftBack.setPower(((backLeftPower / denominator) + ks2));
+        leftFront.setPower(((frontLeftPower / denominator)+ ks2));
+        leftBack.setPower(((backLeftPower / denominator) + ks1));
         rightFront.setPower(((frontRightPower / denominator) + ks2));
         rightBack.setPower(((backRightPower / denominator) + ks1));
 
@@ -83,17 +83,20 @@ public class DriveTrain {
         double YFieldOriented = y * cos(orientation) - x * sin(orientation);
         double XFieldOriented = y * sin(orientation) + x * cos(orientation);
 
-        double maxPow = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double frontLeftPower = (YFieldOriented + XFieldOriented + rx);
+        double frontRightPower = (YFieldOriented - XFieldOriented - rx);
+        double backLeftPower = (YFieldOriented - XFieldOriented + rx);
+        double backRightPower = (YFieldOriented + XFieldOriented - rx);
 
-        double frontLeftPower = (YFieldOriented + XFieldOriented + rx) / maxPow;
-        double frontRightPower = (YFieldOriented - XFieldOriented - rx) / maxPow;
-        double backLeftPower = (YFieldOriented - XFieldOriented + rx) / maxPow;
-        double backRightPower = (YFieldOriented + XFieldOriented - rx) / maxPow;
+        double denominator = Math.max(Math.abs(frontLeftPower), Math.abs(backLeftPower));
+        denominator = Math.max(denominator, Math.abs(frontRightPower));
+        denominator = Math.max(denominator, Math.abs(backRightPower));
+        denominator = Math.max(denominator, 1.0);
 
-        leftFront.setPower(frontLeftPower);
-        rightFront.setPower(frontRightPower);
-        leftBack.setPower(backLeftPower);
-        rightBack.setPower(backRightPower);
+        leftFront.setPower(frontLeftPower/denominator + ks2);
+        rightFront.setPower(frontRightPower/denominator +ks2);
+        leftBack.setPower(backLeftPower/denominator + ks1);
+        rightBack.setPower(backRightPower/denominator + ks2);
     }
 
 
