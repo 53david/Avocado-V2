@@ -1,6 +1,14 @@
 package org.firstinspires.ftc.teamcode.Components;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
+import static org.firstinspires.ftc.teamcode.OpModes.Teleop.imu;
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.leftBack;
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.leftFront;
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.rightBack;
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.rightFront;
+
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,21 +16,17 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Wrappers.PIDController;
 
 @Configurable
 public class DriveTrain {
     public static double Voltage = 0;
-    private DcMotorEx leftFront, rightFront, leftBack, rightBack;
     public static double ks1 = 0, ks2 = 0.07;
     boolean ok; private static double multiplier = 1, multi = 1.2;
     private PIDController tuner = new PIDController(0,0,0);
-    public DriveTrain(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftBack, DcMotorEx rightBack) {
+    public DriveTrain() {
 
-        this.leftFront = leftFront;
-        this.rightFront = rightFront;
-        this.leftBack = leftBack;
-        this.rightBack = rightBack;
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -67,6 +71,29 @@ public class DriveTrain {
         rightBack.setPower(((backRightPower / denominator) + ks1));
 
 
+    }
+    public void fieldDrive(){
+        double y = -gm1.left_stick_y;
+        double x = gm1.left_stick_x;
+        double rx = gm1.left_trigger - gm1.right_trigger;
+
+
+        double orientation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+        double YFieldOriented = y * cos(orientation) - x * sin(orientation);
+        double XFieldOriented = y * sin(orientation) + x * cos(orientation);
+
+        double maxPow = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+
+        double frontLeftPower = (YFieldOriented + XFieldOriented + rx) / maxPow;
+        double frontRightPower = (YFieldOriented - XFieldOriented - rx) / maxPow;
+        double backLeftPower = (YFieldOriented - XFieldOriented + rx) / maxPow;
+        double backRightPower = (YFieldOriented + XFieldOriented - rx) / maxPow;
+
+        leftFront.setPower(frontLeftPower);
+        rightFront.setPower(frontRightPower);
+        leftBack.setPower(backLeftPower);
+        rightBack.setPower(backRightPower);
     }
 
 

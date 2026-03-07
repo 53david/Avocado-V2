@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotLogic;
 
-import static org.firstinspires.ftc.teamcode.Components.Intake.transfer;
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.transfer;
 
 public class TransferLogic {
     public enum State{

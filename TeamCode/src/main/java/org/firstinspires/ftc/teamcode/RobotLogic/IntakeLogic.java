@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotLogic;
 
-import static org.firstinspires.ftc.teamcode.Components.Intake.intakeMotor;
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.intakeMotor;
 
 public class IntakeLogic {
     public enum State {

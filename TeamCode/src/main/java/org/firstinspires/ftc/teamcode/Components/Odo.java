@@ -71,6 +71,7 @@ public class Odo {
                     (getCurrentPosition().x - Turret.goalPositionX) * (getCurrentPosition().x - Turret.goalPositionX) +
                             (getCurrentPosition().y - Turret.goalPositionY) * (getCurrentPosition().y - Turret.goalPositionY)
             );
+
     }
 
 

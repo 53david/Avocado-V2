@@ -17,7 +17,6 @@ public class CameraTracking extends LinearOpMode {
     WebcamName webcam;
     GoBildaPinpointDriver pp;
     Turret turret;
-    TelemetryManager telemetry1;
     @Override
     public void runOpMode(){
         Init();
@@ -32,8 +31,7 @@ public class CameraTracking extends LinearOpMode {
         shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
         pp = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
-        telemetry1 = PanelsTelemetry.INSTANCE.getTelemetry();
-        turret = new Turret(rotate,shoot1,shoot2,telemetry1,webcam,pp);
+        turret = new Turret(pp);
 
     }
 }

@@ -2,19 +2,15 @@ package org.firstinspires.ftc.teamcode.Components;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
-import static org.firstinspires.ftc.teamcode.OpModes.TestOpModes.BetterFormula.rpm;
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.intakeMotor;
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.transfer;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 @Configurable
 public class Intake {
-    public static DcMotorEx intakeMotor;
-    public static Servo transfer;
     public static double rpm = 0;
     public static double Kp = 0;
     public static double Ki = 0;
@@ -46,7 +42,7 @@ public class Intake {
             intakeMotor.setPower(0);
         }
         if (gm1.cross && gm1.cross == prevgm1.cross){
-            transfer.setPosition(0.05);
+            transfer.setPosition(0.06);
 
         }
 

@@ -5,7 +5,7 @@ import com.pedropathing.math.MathFunctions;
 @Configurable
 public class ShooterConstants {
 
-    public static double Kp = 0.005;
+    public static double Kp = 0.006;
     public static double Ki = 0;
     public static double Kd = 0;
     public static double Ks = 0.2;
