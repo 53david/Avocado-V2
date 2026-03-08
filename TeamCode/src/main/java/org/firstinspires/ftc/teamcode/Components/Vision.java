@@ -2,17 +2,24 @@ package org.firstinspires.ftc.teamcode.Components;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
+import static org.firstinspires.ftc.teamcode.OpModes.Teleop.telemetryM;
 import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.webcam;
 
 import android.util.Size;
 
 import com.bylazar.camerastream.PanelsCameraStream;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import java.util.concurrent.TimeUnit;
 
 public class Vision {
 
@@ -23,6 +30,7 @@ public class Vision {
 
     public static long exposure = 2;
     public static int gain = 200;
+    public static int temp = 40000;
     public enum AllienceState {
         RED,
         BLUE,
@@ -51,7 +59,24 @@ public class Vision {
 
     }
     public void update(){
+        if (visionPortal.getCameraState()==VisionPortal.CameraState.STREAMING) {
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            WhiteBalanceControl whiteBalanceControl= visionPortal.getCameraControl(WhiteBalanceControl.class);
+            exposureControl.setMode(ExposureControl.Mode.Manual);
+            whiteBalanceControl.setMode(WhiteBalanceControl.Mode.MANUAL);
+            exposureControl.setExposure(exposure, TimeUnit.MILLISECONDS);
+            whiteBalanceControl.setWhiteBalanceTemperature(temp);
+            gainControl.setGain(gain);
 
+            telemetryM.addLine("STATUS: STREAMING");
+            telemetryM.update();
+        }
+        else {
+            telemetryM.addLine("STATUS: WAITING FOR STREAM");
+            telemetryM.update();
+        }
+        AllienceUpdate();
     }
     public double CameraOffset(){
 
