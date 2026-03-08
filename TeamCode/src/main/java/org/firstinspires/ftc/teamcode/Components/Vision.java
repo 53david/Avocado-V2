@@ -87,7 +87,7 @@ public class Vision {
         }
         return 1e9;
     }
-    private double DistanceOffset(){
+    public double DistanceOffset(){
 
         for(AprilTagDetection tag:tagProcessor.getDetections()){
             if (tag.id == allianceID) {
