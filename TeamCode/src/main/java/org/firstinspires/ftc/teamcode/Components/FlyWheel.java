@@ -17,12 +17,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class FlyWheel {
     PIDController controller = new PIDController(Kp,Ki,Kd);
-    public static double rpm = 0;
+    public static double rpm = 800;
     Vision vision = new Vision();
     public FlyWheel(){
         shoot1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shoot2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         shoot2.setDirection(DcMotorSimple.Direction.REVERSE);
+        shoot1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        shoot2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
     public void update(){
 

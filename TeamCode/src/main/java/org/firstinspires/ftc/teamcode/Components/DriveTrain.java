@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.Components;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
-import static org.firstinspires.ftc.teamcode.OpModes.Teleop.imu;
+import static org.firstinspires.ftc.teamcode.OpModes.TestOpModes.FieldCentric.imu;
 import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.leftBack;
 import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.leftFront;
 import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.rightBack;
 import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.rightFront;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -65,23 +64,23 @@ public class DriveTrain {
         denominator = Math.max(denominator, Math.abs(backRightPower));
         denominator = Math.max(denominator, 1.0);
 
-        leftFront.setPower(((frontLeftPower / denominator)+ ks2));
-        leftBack.setPower(((backLeftPower / denominator) + ks1));
-        rightFront.setPower(((frontRightPower / denominator) + ks2));
-        rightBack.setPower(((backRightPower / denominator) + ks1));
+        leftFront.setPower(((frontLeftPower / denominator / Voltage)+ ks2));
+        leftBack.setPower(((backLeftPower / denominator / Voltage) + ks1));
+        rightFront.setPower(((frontRightPower / denominator /Voltage) + ks2));
+        rightBack.setPower(((backRightPower / denominator / Voltage) + ks1));
 
 
     }
     public void fieldDrive(){
-        double y = -gm1.left_stick_y;
-        double x = gm1.left_stick_x;
-        double rx = gm1.left_trigger - gm1.right_trigger;
+        double y = -gamepad1.left_stick_y;
+        double x = gamepad1.left_stick_x;
+        double rx = gamepad1.left_trigger - gamepad1.right_trigger;
 
 
         double orientation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-        double YFieldOriented = y * cos(orientation) - x * sin(orientation);
-        double XFieldOriented = y * sin(orientation) + x * cos(orientation);
+        double YFieldOriented = y * Math.cos(orientation) - x * Math.sin(orientation);
+        double XFieldOriented = y * Math.sin(orientation) + x * Math.cos(orientation);
 
         double frontLeftPower = (YFieldOriented + XFieldOriented + rx);
         double frontRightPower = (YFieldOriented - XFieldOriented - rx);

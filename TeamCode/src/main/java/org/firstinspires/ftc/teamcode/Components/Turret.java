@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.Components;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.telemetryM;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
-
+import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Kp;
+import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Ki;
+import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Kd;
 import com.arcrobotics.ftclib.controller.PIDController;
 
 import com.bylazar.configurables.annotations.Configurable;
@@ -35,7 +37,7 @@ public class Turret {
     public double globalError;
 
     PIDController pid = new PIDController(KP,0,KD);
-    org.firstinspires.ftc.teamcode.Wrappers.PIDController turretController = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(1.3,0,0.08);
+    org.firstinspires.ftc.teamcode.Wrappers.PIDController turretController = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(Kp,Ki,Kd);
     org.firstinspires.ftc.teamcode.Wrappers.PIDController pd = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(P,0,D);
     public Vision vision = new Vision();
     public enum AllienceState {
@@ -109,6 +111,8 @@ public class Turret {
     }
 
     public void update() {
+        PIDCoefficients coef = new PIDCoefficients(Ki,Ki,Kd);
+        turretController.setPidCoefficients(coef);
         TurretUpdate();
         AllienceUpdate();
 

@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.Trajectories;
 
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
-public class CloseBlueTrajectory {
+public class Test {
 
     public static final Pose startPose = new Pose(32.000, 135.000, Math.toRadians(270));
     private  final Pose shootPose = new Pose(55.000, 85.000, Math.toRadians(180));
@@ -16,7 +17,7 @@ public class CloseBlueTrajectory {
 
     public  final Pose control1 = new Pose(67.000,63.000);
     public  final Pose control2 = new Pose(44.000,66.000);
-
+    TelemetryManager telemetry;
     public  PathChain StartShootPos, ShootBall1Pos, Ball1ShootPos,ShootBall2Pos ,Ball2ShootPos, ShootGatePos, GateShootPos;
     public  Follower follower;
     public void buildPaths() {
@@ -59,8 +60,9 @@ public class CloseBlueTrajectory {
         Ball2Shoot,
     };
     State state;
-    public CloseBlueTrajectory(Follower follower){
+    public Test(Follower follower, TelemetryManager telemetry){
         this.follower = follower;
+        this.telemetry = telemetry;
         state = State.StartShoot;
         buildPaths();
     }
@@ -70,38 +72,11 @@ public class CloseBlueTrajectory {
         switch (state){
             case StartShoot:
                 follower.followPath(StartShootPos);
-                if (!follower.isBusy())
-                    state = State.ShootBall1;
-                break;
-            case ShootBall1:
-                follower.followPath(ShootBall1Pos);
-                if (!follower.isBusy())
-                    state = State.Ball1Shoot;
-                break;
-            case Ball1Shoot:
-                follower.followPath(Ball1ShootPos);
-                if (!follower.isBusy())
-                    state = State.ShootBall2;
+                state = State.ShootBall2;
+                telemetry.addLine("Sigma 1");
                 break;
             case ShootBall2:
-                follower.followPath(ShootBall2Pos);
-                if (!follower.isBusy())
-                    state = State.Ball2Shoot;
-                break;
-            case Ball2Shoot:
-                follower.followPath(Ball2ShootPos);
-                if (!follower.isBusy())
-                    state = State.ShootGate;
-                break;
-            case ShootGate:
-                follower.followPath(ShootGatePos);
-                if (!follower.isBusy())
-                    state = State.GateShoot;
-                break;
-            case GateShoot:
-                follower.followPath(GateShootPos);
-                if (!follower.isBusy())
-                    state = State.ShootGate;
+                telemetry.addLine("Sigma 2");
                 break;
         }
     }
