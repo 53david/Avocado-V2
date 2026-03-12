@@ -35,7 +35,7 @@ public class Turret {
     public static double x = 20;
     GoBildaPinpointDriver pp;
     public double globalError;
-
+    Vision vision;
     PIDController pid = new PIDController(KP,0,KD);
     org.firstinspires.ftc.teamcode.Wrappers.PIDController turretController = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(Kp,Ki,Kd);
     org.firstinspires.ftc.teamcode.Wrappers.PIDController pd = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(P,0,D);
@@ -83,8 +83,8 @@ public class Turret {
         return currContinuosAngle - bestcontinuosAngle;
     }
     public void updateFacingDirection(SparkFunOTOS.Pose2D robotPose) {
-        if (Vision.CameraOffset() != 1e9) {
-                telemetryM.addLine("Esti prost");
+        if (vision.CameraOffset() != 1e9) {
+                telemetryM.addLine("Merge ca un cur");
                 telemetryM.update();
         }
         else {
@@ -99,7 +99,7 @@ public class Turret {
             double error = LiniarizedTargetAngle(ShouldHaveTurretHeading, currentTurretRel);
             globalError = error;
             telemetryM.addData("error", error);
-            telemetryM.addData("currticks", rotate.getCurrentPosition());telemetryM.addData("Offset",Vision.CameraOffset());
+            telemetryM.addData("currticks", rotate.getCurrentPosition());telemetryM.addData("Offset",vision.CameraOffset());
             if (error == 1e9)
                 rotate.setPower(0);
             else
@@ -140,12 +140,6 @@ public class Turret {
                 if (gm1.circle && prevgm1.circle!=gm1.circle) {
                     bstate = State.Auto;
                     odo.setPosition(new SparkFunOTOS.Pose2D(0,0, Teleop.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)));
-
-                }
-                if (gm1.triangle && prevgm1.triangle!=gm1.triangle){
-                    rotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    rotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    target = 0;
                 }
                 telemetryM.addLine("Manual");
                 break;
@@ -165,10 +159,9 @@ public class Turret {
     public void test(){
         PIDCoefficients coef = new PIDCoefficients(P,0,D);
         pd.setPidCoefficients(coef);
-        if (Vision.CameraOffset()!=1e9){
-            rotate.setPower(pd.calculatePower(Vision.CameraOffset()));
+        if (vision.CameraOffset()!=1e9){
+            rotate.setPower(pd.calculatePower(vision.CameraOffset()));
         }
     }
-
 }
 

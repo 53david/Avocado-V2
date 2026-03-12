@@ -23,8 +23,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Vision {
 
-    public static AprilTagProcessor tagProcessor;
-    public static VisionPortal visionPortal;
+    public  AprilTagProcessor tagProcessor;
+    public  VisionPortal visionPortal;
     double fx = 807.567, fy = 807.567, cx = 345.549, cy = 267.084;
     public static double allianceID = 20;
 
@@ -37,6 +37,7 @@ public class Vision {
     }
     AllienceState state = AllienceState.BLUE;
     public Vision(){
+
         tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawTagOutline(true)
@@ -46,7 +47,6 @@ public class Vision {
                 .setTagLibrary(AprilTagGameDatabase.getDecodeTagLibrary())
                 .setLensIntrinsics(fx, fy, cx, cy)
                 .build();
-
         visionPortal = new VisionPortal.Builder()
                 .addProcessor(tagProcessor)
                 .setCamera(webcam)
@@ -69,16 +69,10 @@ public class Vision {
             whiteBalanceControl.setWhiteBalanceTemperature(temp);
             gainControl.setGain(gain);
 
-            telemetryM.addLine("STATUS: STREAMING");
-            telemetryM.update();
-        }
-        else {
-            telemetryM.addLine("STATUS: WAITING FOR STREAM");
-            telemetryM.update();
         }
         AllienceUpdate();
     }
-    public static double CameraOffset(){
+    public  double CameraOffset(){
 
         for(AprilTagDetection tag:tagProcessor.getDetections()){
             if (tag.id == allianceID) {
