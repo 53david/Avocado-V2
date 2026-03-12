@@ -77,6 +77,9 @@ public class Test {
                 break;
             case ShootBall2:
                 telemetry.addLine("Sigma 2");
+                if (!follower.isBusy()){
+                    telemetry.addLine("Sigma done");
+                }
                 break;
         }
     }

@@ -23,10 +23,10 @@ import java.util.concurrent.TimeUnit;
 
 public class Vision {
 
-    public AprilTagProcessor tagProcessor;
-    public VisionPortal visionPortal;
+    public static AprilTagProcessor tagProcessor;
+    public static VisionPortal visionPortal;
     double fx = 807.567, fy = 807.567, cx = 345.549, cy = 267.084;
-    double allianceID = 20;
+    public static double allianceID = 20;
 
     public static long exposure = 2;
     public static int gain = 200;
@@ -52,7 +52,7 @@ public class Vision {
                 .setCamera(webcam)
                 .setCameraResolution(new Size(800, 600))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .enableLiveView(true)
+                .setLiveViewContainerId(0)
                 .build();
 
         PanelsCameraStream.INSTANCE.startStream(visionPortal, 10);
@@ -78,7 +78,7 @@ public class Vision {
         }
         AllienceUpdate();
     }
-    public double CameraOffset(){
+    public static double CameraOffset(){
 
         for(AprilTagDetection tag:tagProcessor.getDetections()){
             if (tag.id == allianceID) {

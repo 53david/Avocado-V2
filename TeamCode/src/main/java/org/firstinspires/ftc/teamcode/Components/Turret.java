@@ -39,7 +39,6 @@ public class Turret {
     PIDController pid = new PIDController(KP,0,KD);
     org.firstinspires.ftc.teamcode.Wrappers.PIDController turretController = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(Kp,Ki,Kd);
     org.firstinspires.ftc.teamcode.Wrappers.PIDController pd = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(P,0,D);
-    public Vision vision = new Vision();
     public enum AllienceState {
         RED,
         BLUE,
@@ -84,7 +83,7 @@ public class Turret {
         return currContinuosAngle - bestcontinuosAngle;
     }
     public void updateFacingDirection(SparkFunOTOS.Pose2D robotPose) {
-        if (vision.CameraOffset() != 1e9) {
+        if (Vision.CameraOffset() != 1e9) {
                 telemetryM.addLine("Esti prost");
                 telemetryM.update();
         }
@@ -100,7 +99,7 @@ public class Turret {
             double error = LiniarizedTargetAngle(ShouldHaveTurretHeading, currentTurretRel);
             globalError = error;
             telemetryM.addData("error", error);
-            telemetryM.addData("currticks", rotate.getCurrentPosition());
+            telemetryM.addData("currticks", rotate.getCurrentPosition());telemetryM.addData("Offset",Vision.CameraOffset());
             if (error == 1e9)
                 rotate.setPower(0);
             else
@@ -166,8 +165,8 @@ public class Turret {
     public void test(){
         PIDCoefficients coef = new PIDCoefficients(P,0,D);
         pd.setPidCoefficients(coef);
-        if (vision.CameraOffset()!=1e9) {
-            rotate.setPower(pd.calculatePower(vision.CameraOffset()));
+        if (Vision.CameraOffset()!=1e9){
+            rotate.setPower(pd.calculatePower(Vision.CameraOffset()));
         }
     }
 

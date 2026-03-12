@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Components.Turret;
+import org.firstinspires.ftc.teamcode.Wrappers.Initializer;
 
 @TeleOp
 public class CameraTracking extends LinearOpMode {
@@ -26,10 +27,7 @@ public class CameraTracking extends LinearOpMode {
         }
     }
     public void Init(){
-        webcam = hardwareMap.get(WebcamName.class,"Webcam 1");
-        shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
-        shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
-        rotate = hardwareMap.get(DcMotorEx.class,"rotate");
+        Initializer.start(hardwareMap);
         pp = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
         turret = new Turret(pp);
 

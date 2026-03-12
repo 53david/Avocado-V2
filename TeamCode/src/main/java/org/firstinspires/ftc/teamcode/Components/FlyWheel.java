@@ -12,11 +12,13 @@ import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Ks;
 import static org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants.Kv;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
+@Configurable
 public class FlyWheel {
     PIDController controller = new PIDController(Kp,Ki,Kd);
+    double vel1 = 0;
     public static double rpm = 800;
     Vision vision = new Vision();
     public FlyWheel(){
@@ -30,7 +32,7 @@ public class FlyWheel {
     public void update(){
 
         controller = new PIDController(Kp,Ki,Kd);
-        double vel1 = controller.calculate(-shoot2.getVelocity(),rpm);
+        vel1 = controller.calculate(-shoot2.getVelocity(),rpm);
         vel1 += Kv * rpm + Ks;
         vel1 *= Voltage;
         shoot1.setPower(vel1);

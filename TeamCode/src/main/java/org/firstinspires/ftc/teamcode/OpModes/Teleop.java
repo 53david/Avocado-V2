@@ -78,6 +78,8 @@ public class Teleop extends LinearOpMode {
         gobilda.setEncoderResolution(res, DistanceUnit.MM);
         chassis = new DriveTrain();
         intake = new Intake();
+        flyWheel = new FlyWheel();
+        vision = new Vision();
         turret = new Turret(gobilda);
         Turret.Voltage = 12.0/hardwareMap.getAll(VoltageSensor.class).get(0).getVoltage();
         DriveTrain.Voltage = 12.0/hardwareMap.getAll(VoltageSensor.class).get(0).getVoltage();
