@@ -18,12 +18,14 @@ public class CameraTracking extends LinearOpMode {
     WebcamName webcam;
     GoBildaPinpointDriver pp;
     Turret turret;
+    public static TelemetryManager telemetryManager = PanelsTelemetry.INSTANCE.getTelemetry();
     @Override
     public void runOpMode(){
         Init();
         waitForStart();
         while (opModeIsActive()){
             turret.test();
+            telemetryManager.update();
         }
     }
     public void Init(){

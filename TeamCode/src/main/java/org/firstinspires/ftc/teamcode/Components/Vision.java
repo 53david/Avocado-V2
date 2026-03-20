@@ -2,15 +2,13 @@ package org.firstinspires.ftc.teamcode.Components;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
-import static org.firstinspires.ftc.teamcode.OpModes.Teleop.telemetryM;
 import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.webcam;
 
 import android.util.Size;
 
 import com.bylazar.camerastream.PanelsCameraStream;
+import com.bylazar.configurables.annotations.Configurable;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
@@ -20,14 +18,13 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.concurrent.TimeUnit;
-
+@Configurable
 public class Vision {
 
     public  AprilTagProcessor tagProcessor;
     public  VisionPortal visionPortal;
     double fx = 807.567, fy = 807.567, cx = 345.549, cy = 267.084;
     public static double allianceID = 20;
-
     public static long exposure = 2;
     public static int gain = 200;
     public static int temp = 40000;
@@ -45,7 +42,7 @@ public class Vision {
                 .setDrawCubeProjection(true)
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setTagLibrary(AprilTagGameDatabase.getDecodeTagLibrary())
-                .setLensIntrinsics(fx, fy, cx, cy)
+                .setLensIntrinsics(fx,fy,cx,cy)
                 .build();
         visionPortal = new VisionPortal.Builder()
                 .addProcessor(tagProcessor)
@@ -57,12 +54,15 @@ public class Vision {
 
         PanelsCameraStream.INSTANCE.startStream(visionPortal, 10);
 
+
     }
     public void update(){
+
         if (visionPortal.getCameraState()==VisionPortal.CameraState.STREAMING) {
+
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
             GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-            WhiteBalanceControl whiteBalanceControl= visionPortal.getCameraControl(WhiteBalanceControl.class);
+            WhiteBalanceControl whiteBalanceControl = visionPortal.getCameraControl(WhiteBalanceControl.class);
             exposureControl.setMode(ExposureControl.Mode.Manual);
             whiteBalanceControl.setMode(WhiteBalanceControl.Mode.MANUAL);
             exposureControl.setExposure(exposure, TimeUnit.MILLISECONDS);
@@ -76,7 +76,7 @@ public class Vision {
 
         for(AprilTagDetection tag:tagProcessor.getDetections()){
             if (tag.id == allianceID) {
-                return Math.toRadians(tag.ftcPose.bearing);
+                return -tag.ftcPose.bearing;
             }
         }
         return 1e9;

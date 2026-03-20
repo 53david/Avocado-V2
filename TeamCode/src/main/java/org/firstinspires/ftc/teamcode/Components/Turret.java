@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Components;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.telemetryM;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.gm1;
 import static org.firstinspires.ftc.teamcode.OpModes.Teleop.prevgm1;
+import static org.firstinspires.ftc.teamcode.OpModes.TestOpModes.CameraTracking.telemetryManager;
 import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Kp;
 import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Ki;
 import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Kd;
@@ -24,18 +25,17 @@ import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.rotate;
 @Configurable
 public class Turret {
     public static double KP = 0.006;
-    public static double KD = 0.0035;
-    public static double P = 0;
-    public static double D = 0;
+    public static double KD = 0.0002;
+    public static double P = 0.015;
+    public static double D = 0.0005;
     public static double Voltage = 0;
     double target =0;
 
     public static double ManualOffset =0;
     public static double FeedForwardTurret = 0;
-    public static double x = 20;
     GoBildaPinpointDriver pp;
     public double globalError;
-    Vision vision;
+    Vision vision = new Vision();
     PIDController pid = new PIDController(KP,0,KD);
     org.firstinspires.ftc.teamcode.Wrappers.PIDController turretController = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(Kp,Ki,Kd);
     org.firstinspires.ftc.teamcode.Wrappers.PIDController pd = new org.firstinspires.ftc.teamcode.Wrappers.PIDController(P,0,D);
@@ -84,8 +84,7 @@ public class Turret {
     }
     public void updateFacingDirection(SparkFunOTOS.Pose2D robotPose) {
         if (vision.CameraOffset() != 1e9) {
-                telemetryM.addLine("Merge ca un cur");
-                telemetryM.update();
+                rotate.setPower(pd.calculatePower(vision.CameraOffset()));
         }
         else {
             robotPose = new SparkFunOTOS.Pose2D(-robotPose.y, robotPose.x, robotPose.h);
@@ -110,8 +109,9 @@ public class Turret {
     }
 
     public void update() {
-        PIDCoefficients coef = new PIDCoefficients(Ki,Ki,Kd);
+        PIDCoefficients coef = new PIDCoefficients(Kp,Ki,Kd);
         turretController.setPidCoefficients(coef);
+        pid.setPID(KP,0,KD);
         TurretUpdate();
         AllienceUpdate();
 
@@ -141,6 +141,10 @@ public class Turret {
                     bstate = State.Auto;
                     odo.setPosition(new SparkFunOTOS.Pose2D(0,0, Teleop.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)));
                 }
+                if (vision.CameraOffset()!=1e9){
+                    rotate.setPower(pd.calculatePower(vision.CameraOffset()));
+                    target = rotate.getCurrentPosition();
+                }
                 telemetryM.addLine("Manual");
                 break;
             case Auto:
@@ -161,6 +165,8 @@ public class Turret {
         pd.setPidCoefficients(coef);
         if (vision.CameraOffset()!=1e9){
             rotate.setPower(pd.calculatePower(vision.CameraOffset()));
+            telemetryManager.update();
+            telemetryManager.addData("error",vision.CameraOffset());
         }
     }
 }

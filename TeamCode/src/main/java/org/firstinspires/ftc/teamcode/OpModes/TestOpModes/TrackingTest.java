@@ -24,8 +24,6 @@ import org.firstinspires.ftc.teamcode.Wrappers.ShooterConstants;
 @Configurable
 public class TrackingTest extends LinearOpMode {
     DcMotorEx rotate;
-    private DcMotorEx leftFront, rightFront, leftBack, rightBack;
-    public static double powerOffset = 0.7;
     public static double target = 0;
     public double gearRatio = 130.0 / 34.0;
     TelemetryManager telemetryM;

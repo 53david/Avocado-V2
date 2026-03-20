@@ -26,24 +26,24 @@ public class Intake {
         MotorConfigurationType m= intakeMotor.getMotorType();
         m.setAchieveableMaxRPMFraction(1);
         intakeMotor.setMotorType(m);
-
     }
 
     public void update() {
+        intakeMotor.setPower(rpm);
         if(gm1.right_bumper && gm1.right_bumper == prevgm1.right_bumper){
-            intakeMotor.setPower(1);
+            rpm = 1;
         }
         else if (gm1.left_bumper && gm1.left_bumper == prevgm1.left_bumper){
             transfer.setPosition(0.05);
-            intakeMotor.setPower(-1);
+            rpm = -1;
         }
         else {
             transfer.setPosition(0.3);
-            intakeMotor.setPower(0);
+            rpm = 0;
         }
         if (gm1.cross && gm1.cross == prevgm1.cross){
             transfer.setPosition(0.06);
-
+            rpm = 1;
         }
 
 }
