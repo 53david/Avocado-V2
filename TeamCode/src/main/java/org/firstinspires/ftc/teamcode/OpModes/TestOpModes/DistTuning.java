@@ -55,11 +55,10 @@ public class DistTuning extends LinearOpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT
         )));
-        odo = new Odo(pp);
+        odo = new Odo();
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         Voltage = 12.0/hardwareMap.getAll(VoltageSensor.class).get(0).getVoltage();
         shoot1 = hardwareMap.get(DcMotorEx.class,"shoot1");
         shoot2 = hardwareMap.get(DcMotorEx.class,"shoot2");
-        pp = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
     }
 }

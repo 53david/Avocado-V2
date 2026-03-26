@@ -30,8 +30,7 @@ public class CameraTracking extends LinearOpMode {
     }
     public void Init(){
         Initializer.start(hardwareMap);
-        pp = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
-        turret = new Turret(pp);
+        turret = new Turret();
 
     }
 }

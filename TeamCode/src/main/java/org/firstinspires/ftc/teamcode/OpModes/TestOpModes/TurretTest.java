@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.TestOpModes;
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.pp;
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.rotate;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -30,9 +32,7 @@ public class TurretTest extends LinearOpMode {
     public static double goalPositionY = 0;
     public double globalError =0;
     TelemetryManager telemetryM;
-    Turret turret;
     Odo odo;
-    DcMotorEx rotate,shoot1,shoot2;
     PIDController turretController = new PIDController(KP,KI,KD);
     GoBildaPinpointDriver pp;
     WebcamName webcam;
@@ -110,8 +110,7 @@ public class TurretTest extends LinearOpMode {
     }
     public void hardwinit(){
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
-        pp = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-        odo = new Odo(pp);
+        odo = new Odo();
     }
 }

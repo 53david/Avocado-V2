@@ -8,7 +8,7 @@ import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Kp;
 import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Ki;
 import static org.firstinspires.ftc.teamcode.Wrappers.TurretPID.Kd;
 import com.arcrobotics.ftclib.controller.PIDController;
-
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.pp;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
@@ -33,7 +33,6 @@ public class Turret {
 
     public static double ManualOffset =0;
     public static double FeedForwardTurret = 0;
-    GoBildaPinpointDriver pp;
     public double globalError;
     Vision vision = new Vision();
     PIDController pid = new PIDController(KP,0,KD);
@@ -50,9 +49,8 @@ public class Turret {
     AllienceState state = AllienceState.BLUE;
     State bstate = State.Manual;
     public static double goalPositionX = 825, goalPositionY = -300;
-    public Turret(GoBildaPinpointDriver pp) {
+    public Turret() {
 
-        this.pp = pp;
         rotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -131,7 +129,7 @@ public class Turret {
         }
     }
     public void TurretUpdate(){
-        Odo odo =new Odo(pp);
+        Odo odo =new Odo();
         odo.update();
         switch (bstate){
             case Manual:

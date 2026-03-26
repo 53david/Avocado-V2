@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Wrappers;
 
 
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -19,6 +20,7 @@ public class Initializer {
     public static DcMotorEx shoot2;
     public static WebcamName webcam;
     public static Servo transfer;
+    public static GoBildaPinpointDriver pp;
     public static void start(HardwareMap hwMap){
         intakeMotor = hwMap.get(DcMotorEx.class,"intake");
         transfer = hwMap.get(Servo.class,"transfer");
@@ -30,5 +32,6 @@ public class Initializer {
         shoot2 = hwMap.get(DcMotorEx.class,"shoot2");
         rotate = hwMap.get(DcMotorEx.class,"rotate");
         webcam = hwMap.get(WebcamName.class,"Webcam 1");
+        pp = hwMap.get(GoBildaPinpointDriver.class,"pinpoint");
     }
 }

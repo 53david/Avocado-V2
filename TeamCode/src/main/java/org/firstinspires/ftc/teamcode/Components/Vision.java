@@ -53,7 +53,7 @@ public class Vision {
                 .build();
 
         PanelsCameraStream.INSTANCE.startStream(visionPortal, 10);
-
+        visionPortal.stopStreaming();
 
     }
     public void update(){

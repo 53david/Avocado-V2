@@ -64,9 +64,7 @@ public class TrackingTest extends LinearOpMode {
 
         rotate = hardwareMap.get(DcMotorEx.class,"rotate");
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-        pp =hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
-        odo = new Odo(pp);
-        pp.setEncoderResolution(res, DistanceUnit.MM);
+        odo = new Odo();
         rotate.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rotate.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
     }

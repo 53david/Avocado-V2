@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Components;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.RADIANS;
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.normalizeRadians;
+import static org.firstinspires.ftc.teamcode.Wrappers.Initializer.pp;
 
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
@@ -16,9 +17,9 @@ public class Odo {
     double res = 2000/(Math.PI * 31);
     public static double RedGoalX = 144,RedGoalY = 144,BlueGoalX = 144, BlueGoalY = 0;
     TelemetryManager telemetry;
-    static GoBildaPinpointDriver pp;
-    public Odo(GoBildaPinpointDriver pp){
-        this.pp=pp;
+
+    public Odo(){
+
         pp.setOffsets(48.366 * 0.0394,48.366 * 0.0394, DistanceUnit.INCH);
         pp.setEncoderResolution(res,
                 DistanceUnit.MM);

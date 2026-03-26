@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class FlyWheel {
     PIDController controller = new PIDController(Kp,Ki,Kd);
     double vel1 = 0;
-    public static double rpm = 1200;
+    public static double rpm = 800;
     Vision vision = new Vision();
     public FlyWheel(){
         shoot1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

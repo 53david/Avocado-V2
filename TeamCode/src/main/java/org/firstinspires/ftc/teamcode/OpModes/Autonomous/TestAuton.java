@@ -17,14 +17,15 @@ import org.firstinspires.ftc.teamcode.Trajectories.Test;
 public class TestAuton extends LinearOpMode {
     Follower follower;
     TelemetryManager telemetry;
+    Test test;
     GoBildaPinpointDriver pp;
     @Override
     public void runOpMode(){
         telemetry = PanelsTelemetry.INSTANCE.getTelemetry();
         follower = Constants.createFollower(hardwareMap);
-        Test test = new Test(follower,telemetry);
+        test = new Test(follower,telemetry);
         follower.setStartingPose(Test.startPose);
-        Odo odo = new Odo(pp);
+        Odo odo = new Odo();
         waitForStart();
         while (opModeIsActive()){
             follower.update();
