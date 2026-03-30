@@ -23,8 +23,7 @@ public class DriveTrain {
     public static double Voltage = 0;
     public static double target = 0;
     public static double ks1 = 0, ks2 = 0.07;
-    boolean ok; private static double multiplier = 0.01, multi = 1.2;
-    private PIDController tuner = new PIDController(0,0,0);
+    private static double multiplier = 0.01, multi = 1.2;
     public DriveTrain() {
 
         leftFront.setDirection(DcMotorEx.Direction.REVERSE);
@@ -74,8 +73,8 @@ public class DriveTrain {
 
     }
     public void fieldDrive(Gamepad gamepad1){
-        double y = -gamepad1.left_stick_y;
-        double x = gamepad1.left_stick_x;
+        double y = gamepad1.left_stick_y;
+        double x = -gamepad1.left_stick_x;
         double rx = gamepad1.left_trigger - gamepad1.right_trigger;
         double orientation = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
@@ -91,7 +90,7 @@ public class DriveTrain {
             rx =  multiplier * error;
             rx = Math.min(Math.max(rx, -0.4),0.4);
         }
-        double YFieldOriented = y * Math.cos(orientation) - x * Math.sin(orientation);
+        double YFieldOriented = y * Math.cos(orientation)  - x * Math.sin(orientation);
         double XFieldOriented = y * Math.sin(orientation) + x * Math.cos(orientation);
 
         double frontLeftPower = (YFieldOriented + XFieldOriented + rx);
